@@ -12,21 +12,23 @@ plane_ID = p.loadURDF("plane.urdf")
 # Load robot
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
-robot = p.loadURDF("panda_arm.urdf", start_pos, start_orientation)
+robot = p.loadURDF("panda_arm.urdf", start_pos, start_orientation, useFixedBase=True)
 
-num_joints = p.getNumJoints(robot)
 
-torque = 5.0
-
-p.setJointMotorControl2(
-    bodyIndex=robot,
-    jointIndex=2, 
-    controlMode=p.TORQUE_CONTROL,
-    force=torque
-)
+# p.setJointMotorControl2(bodyUniqueId=robot, 
+# jointIndex=1, 
+# controlMode=p.VELOCITY_CONTROL,
+# targetVelocity = 1,
+# force = 500)
 
 # Step the simulation for a while to observe the effect
-for _ in range(1000):
+for _ in range(10000):
+    p.setJointMotorControl2(
+        bodyUniqueId=robot,
+        jointIndex=1, 
+        controlMode=p.TORQUE_CONTROL,
+        force=240
+    )
     p.stepSimulation() # Default is 1/240hz
     time.sleep(1/240)  # Match step simulation
 
