@@ -36,7 +36,7 @@ python3 simulation.py
 
 You should see a window pop up with the simulation.
 
-To run the pinocchio test, make sure you are in this directory and run:
+To run get the panda dynamic G, M, and C, make sure you are in this directory and run:
 
 ```bash
 python3 panda_dynamics.py
