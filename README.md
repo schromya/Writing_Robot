@@ -39,48 +39,11 @@ You should see a window pop up with the simulation.
 To run the pinocchio test, make sure you are in this directory and run:
 
 ```bash
-python3 pinocchio_test.py
+python3 panda_dynamics.py
 ```
 
 
 
 
-### Mya notes: please ignore
-```bash
-mkdir rbdl-build
-cd rbdl-build/
-ccmake ../rbdl 
-```
-
-Enable RBDL_BUILD_ADDON_URDFREADER, RBDL_BUILD_EXECUTABLES,  RBDL_BUILD_PYTHON_WRAPPER, RBDL_BUILD_TESTS 
-
-Click c and then later g
-
-```bash
-cd rbdl
-doxygen Doxyfile
-cd ../rbdl-build
-python3 python/setup.py install
-cd ..
-```
-
-Drag and drop /rbdl/doc/html/index.html into browser to view documentation.
-
-
-```bash
-echo 'export PYTHONPATH=$PYTHONPATH:/workspace/rbdl/python' >> ~/.bashrc
-source ~/.bashrc
-```
-
-
-
-Pinocchio: https://github.com/stack-of-tasks/pinocchio/blob/master/examples/README.md
-https://ramoncalvo.com/blog/joint-space-inertia/
-
+## Resources
 https://github.com/bhtxy0525/A_Example_for_Calculating_Robot_Dynamics_Using_Pinocchio_Library/blob/main/README.md
-
-Install conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
-```bash
-pip install pin
-
-```
