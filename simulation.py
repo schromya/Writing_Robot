@@ -15,49 +15,48 @@ start_orientation = p.getQuaternionFromEuler([0,0,0])
 robot = p.loadURDF("panda_arm.urdf", start_pos, start_orientation, useFixedBase=True)
 
 NUM_JOINTS = 7
-JOINT_LIST = range(NUM_JOINTS)
-Kp = 1
-Kd = 1.2
+JOINTS = [i for i in range(NUM_JOINTS)]
+
+
+Kp = [700, 700, 700, 900, 700, 500, 300]
+Kd = [0, 0, 0, 0, 0, 0, 0]
 
 # Desired joint positions
 q_des = [0, -0.785, 0, -2.355, 0, 1.57, 0.785]
 
 # Check position
-p.setJointMotorControlArray(
-        bodyIndex=robot,
-        jointIndices=[0, 1, 2, 3, 4, 5, 6], 
-        controlMode=p.POSITION_CONTROL,
-        targetPositions= q_des,
-        targetVelocities = [0.5 for _ in JOINT_LIST],
-)
+# p.setJointMotorControlArray(
+#         bodyIndex=robot,
+#         jointIndices=[0, 1, 2, 3, 4, 5, 6], 
+#         controlMode=p.POSITION_CONTROL,
+#         targetPositions= q_des,
+#         targetVelocities = [0.5 for _ in JOINTS],
+# )
 
 
 
 # Step the simulation for a while to observe the effect
-for _ in range(1000):
+while(True):
 
+    # TODO: MAKE THESE NUMPY ARRAYS FOR matrix multiplication and speed
+    q = [p.getJointState(robot, i)[0] for i in JOINTS]
+    dq = [p.getJointState(robot, i)[1] for i in JOINTS]
+    e = [q_des[i] - q[i] for i in JOINTS]
 
-    # p.setJointMotorControl2(
-    #     bodyUniqueId=robot,
-    #     jointIndex=1, 
-    #     controlMode=p.TORQUE_CONTROL,
-    #     force=240
-    # )
+    u = [Kp[i] * e[i] + Kd[i] * dq[i] for i in JOINTS]
+    
+    p.setJointMotorControlArray(
+        bodyIndex=robot,
+        jointIndices=JOINTS, 
+        controlMode=p.TORQUE_CONTROL,
+        forces = u
+    )
 
 
     p.stepSimulation() # Default is 1/240hz
 
     time.sleep(1/240)  # Match step simulation
 
-q = [p.getJointState(robot, i)[0] for i in JOINT_LIST]
-dq = [p.getJointState(robot, i)[1] for i in JOINT_LIST]
-print(q)
 
 
-print(dq)
-
-
-# Keep simulation up to see URDF
-while(True):
-    continue
 p.disconnect()
