@@ -26,6 +26,11 @@ M^3 project
     ```bash
     pip install -r requirements.txt
     ```
+    **Windows/Mac**:
+    Install Conda and run:
+    ```bash
+    conda install pinocchio -c conda-forge
+    ```
 
 ## Running
 To run the simulation, make sure you are in this directory and run:
