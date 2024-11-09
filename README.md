@@ -77,6 +77,8 @@ source ~/.bashrc
 Pinocchio: https://github.com/stack-of-tasks/pinocchio/blob/master/examples/README.md
 https://ramoncalvo.com/blog/joint-space-inertia/
 
+https://github.com/bhtxy0525/A_Example_for_Calculating_Robot_Dynamics_Using_Pinocchio_Library/blob/main/README.md
+
 Install conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
 ```bash
 pip install pin
