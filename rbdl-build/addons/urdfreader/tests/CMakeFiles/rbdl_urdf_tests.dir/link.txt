@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/rbdl_urdf_tests.dir/testURDF.cc.o CMakeFiles/rbdl_urdf_tests.dir/__/urdfreader.cc.o -o rbdl_urdf_tests  -Wl,-rpath,/workspace/rbdl-build/addons/urdfreader:/workspace/rbdl-build ../librbdl_urdfreader.so.3.3.1 ../../../librbdl.so.3.3.1 ../thirdparty/urdfparser/liburdfparser.a 
