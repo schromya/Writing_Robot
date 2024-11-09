@@ -53,13 +53,15 @@ Click c and then later g
 ```bash
 cd rbdl
 doxygen Doxyfile
-sudo ./setup.py install
+cd ../rbdl-build
+python3 python/setup.py install
+cd ..
 ```
 
 Drag and drop /rbdl/doc/html/index.html into browser to view documentation.
 
 
-export PYTHONPATH=$PYTHONPATH:<path-to-the-RBDL-build-directory>/python
-
+```bash
 echo 'export PYTHONPATH=$PYTHONPATH:/workspace/rbdl/python' >> ~/.bashrc
-
+source ~/.bashrc
+```
