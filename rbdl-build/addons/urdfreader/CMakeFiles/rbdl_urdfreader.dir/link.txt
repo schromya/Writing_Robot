@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -O3 -DNDEBUG -shared -Wl,-soname,librbdl_urdfreader.so.3.3.1 -o librbdl_urdfreader.so.3.3.1 CMakeFiles/rbdl_urdfreader.dir/urdfreader.cc.o  -Wl,-rpath,/workspace/rbdl-build: ../../librbdl.so.3.3.1 thirdparty/urdfparser/liburdfparser.a 

@@ -35,3 +35,31 @@ python3 simulation.py
 ```
 
 You should see a window pop up with the simulation.
+
+
+
+
+### Mya notes: please ignore
+```bash
+mkdir rbdl-build
+cd rbdl-build/
+ccmake ../rbdl 
+```
+
+Enable RBDL_BUILD_ADDON_URDFREADER, RBDL_BUILD_EXECUTABLES,  RBDL_BUILD_PYTHON_WRAPPER, RBDL_BUILD_TESTS 
+
+Click c and then later g
+
+```bash
+cd rbdl
+doxygen Doxyfile
+sudo ./setup.py install
+```
+
+Drag and drop /rbdl/doc/html/index.html into browser to view documentation.
+
+
+export PYTHONPATH=$PYTHONPATH:<path-to-the-RBDL-build-directory>/python
+
+echo 'export PYTHONPATH=$PYTHONPATH:/workspace/rbdl/python' >> ~/.bashrc
+
