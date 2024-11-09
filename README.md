@@ -26,13 +26,13 @@ Now  build the container image and start the container. Make sure you are in thi
 **If you are on linux...**
 ```bash
 sudo docker build -t robot-container .
-sudo docker run  --rm -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/workspace --net=host robot-container
+sudo docker run  --rm -it -e DISPLAY=$DISPLAY --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/workspace --net=host robot-container
 ```
 
 **If you are on Windows...**
 ```bash
 docker build -t robot-container .
-docker run --rm -it -e  DISPLAY=host.docker.internal:0.0 -v ${PWD}:/workspace --net=host robot-container
+docker run --rm -it -e  DISPLAY=host.docker.internal:0.0 --privileged -v ${PWD}:/workspace --net=host robot-container
 ```
 
 ## Running
