@@ -6,27 +6,16 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # INSTALL PACKAGES
 RUN apt-get update &&\
-    apt-get upgrade -y  &&\
     apt-get install -y \
     curl\
-    python3-pip\
-    git-core\
-    cmake cmake-curses-gui\
-    libeigen3-dev\
-    build-essential\
-    catch2\
-    doxygen\
-    vim\
-    cython3 python3-numpy python3-scipy python3-matplotlib\
-    libboost-all-dev
-
+    python3-pip
 
 
 # Install python packages (WARNING: Only use break-system-packages in container!!!!)
-RUN pip install --break-system-packages urdf-parser-py\
-    readchar\
-    pynput\
-    pandas
+RUN pip install --break-system-packages \
+    pin\
+    numpy\
+    pybullet
 
 WORKDIR /workspace/
 
