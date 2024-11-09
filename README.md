@@ -65,3 +65,14 @@ Drag and drop /rbdl/doc/html/index.html into browser to view documentation.
 echo 'export PYTHONPATH=$PYTHONPATH:/workspace/rbdl/python' >> ~/.bashrc
 source ~/.bashrc
 ```
+
+
+
+Pinocchio: https://github.com/stack-of-tasks/pinocchio/blob/master/examples/README.md
+https://ramoncalvo.com/blog/joint-space-inertia/
+
+Install conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
+```bash
+pip install pin
+
+```
