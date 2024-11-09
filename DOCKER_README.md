@@ -1,8 +1,5 @@
-# Writing Robot
-M^3 project
+# Docker Setup
 
-
-## Setup
 These are the instructions for setting up your system using Docker. We have only tested these instructions on Ubuntu and Windows.
 
 ### 1. Install and Start Docker
@@ -26,32 +23,23 @@ Now  build the container image and start the container. Make sure you are in thi
 **If you are on linux...**
 ```bash
 sudo docker build -t robot-container .
-sudo docker run  --rm -it -e DISPLAY=$DISPLAY --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/workspace --net=host robot-container
+sudo docker run --rm -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/workspace --net=host robot-container
 ```
 
 **If you are on Windows...**
 ```bash
 docker build -t robot-container .
-docker run --rm -it -e  DISPLAY=host.docker.internal:0.0 --privileged -v ${PWD}:/workspace --net=host robot-container
+docker run --rm -it -e DISPLAY=host.docker.internal:0.0 -v ${PWD}:/workspace --net=host robot-container
 ```
 
-## Running
-To run the simulation, make sure you are in this directory and run:
-
-```bash
-python3 simulation.py
-```
-
-You should see a window pop up with the simulation.
-
-To run get the panda dynamic G, M, and C, make sure you are in this directory and run:
-
-```bash
-python3 panda_dynamics.py
-```
+You and your computer are all set up, you rock! Now you are ready to continue onto README.md.
 
 
-## Docker Tips
+
+
+---
+
+### Docker Tips
 * To open another docker terminal for a running container, run the following on your home-machine:
     ```bash
     # Show your running CONTAINER_ID
@@ -64,7 +52,3 @@ python3 panda_dynamics.py
     source /opt/ros/jazzy/setup.sh
     source install/setup.bash
     ```
-
-
-## Resources
-https://github.com/bhtxy0525/A_Example_for_Calculating_Robot_Dynamics_Using_Pinocchio_Library/blob/main/README.md
