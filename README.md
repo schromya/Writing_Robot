@@ -22,14 +22,20 @@ M^3 project
     ```
 
 
-2. Next, install all the python requirements
+2. Next, install all the python requirements:
     ```bash
     pip install -r requirements.txt
     ```
+
     **Windows/Mac**:
-    Install Conda and run:
+    Install [miniconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) and run:
     ```bash
     conda install pinocchio -c conda-forge
+    ```
+
+    **Linux**:
+    ```bash
+    pip install pin
     ```
 
 ## Running
