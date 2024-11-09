@@ -36,6 +36,12 @@ python3 simulation.py
 
 You should see a window pop up with the simulation.
 
+To run the pinocchio test, make sure you are in this directory and run:
+
+```bash
+python3 pinocchio_test.py
+```
+
 
 
 
