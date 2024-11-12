@@ -14,6 +14,8 @@ start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
 robot = p.loadURDF("panda_arm.urdf", start_pos, start_orientation, useFixedBase=True)
 
+table = p.loadURDF("writing_surface.urdf", [0.7,0,0], start_orientation, useFixedBase=True)
+
 NUM_JOINTS = 7
 JOINTS = [i for i in range(NUM_JOINTS)]
 
