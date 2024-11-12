@@ -18,15 +18,15 @@ NUM_JOINTS = 7
 JOINTS = [i for i in range(NUM_JOINTS)]
 
 
-Kp = [700, 700, 700, 900, 700, 500, 300]
-Kd = [0, 0, 0, 0, 0, 0, 0]
+Kp = [900.0, 900.0, 900.0, 900.0, 375.0, 225.0, 100.0] #[700, 700, 700, 900, 700, 500, 300]
+Kd =  [20, 5, 7, 7, 3, 3, 0.1] #[45.0, 45.0, 45.0, 45.0, 15.0, 15.0, 10.0] 
 
 # Desired joint positions
 q_des = [0, -0.785, 0, -2.355, 0, 1.57, 0.785]
 
 # Check position
 # p.setJointMotorControlArray(
-#         bodyIndex=robot,
+#         bodyIndex=robot,[900.0, 900.0, 900.0, 900.0, 375.0, 225.0, 100.0]
 #         jointIndices=[0, 1, 2, 3, 4, 5, 6], 
 #         controlMode=p.POSITION_CONTROL,
 #         targetPositions= q_des,
