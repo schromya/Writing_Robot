@@ -6,6 +6,8 @@ physics_client = p.connect(p.GUI) # or p.DIRECT for non-graphical version
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 p.setGravity(0, 0, -9.81)
 
+
+
 # Load ground
 plane_ID = p.loadURDF("plane.urdf")
 
@@ -18,6 +20,7 @@ table = p.loadURDF("writing_surface.urdf", [0.7,0,0], start_orientation, useFixe
 
 NUM_JOINTS = 7
 JOINTS = [i for i in range(NUM_JOINTS)]
+
 
 
 Kp = [900.0, 900.0, 900.0, 900.0, 375.0, 225.0, 100.0] #[700, 700, 700, 900, 700, 500, 300]
