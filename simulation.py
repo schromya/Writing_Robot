@@ -12,7 +12,7 @@ plane_ID = p.loadURDF("plane.urdf")
 # Load robot
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
-robot = p.loadURDF("panda_arm.urdf", start_pos, start_orientation, useFixedBase=True)
+robot = p.loadURDF("panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
 
 table = p.loadURDF("writing_surface.urdf", [0.7,0,0], start_orientation, useFixedBase=True)
 
