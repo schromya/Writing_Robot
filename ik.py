@@ -15,8 +15,8 @@ data = model.createData()
 JOINT_ID = model.njoints - 1
 oMdes = pin.SE3( np.array([ # Rotation matrix (facing down)
                     [1, 0, 0],
-                    [0, 1, 0],
-                    [0, 0, 1]
+                    [0, -1, 0],
+                    [0, 0, -1]
                 ]), 
                  np.array([0.31, 0.00,  0.70]) # [X,Y, Z] # Default positions
                  )
