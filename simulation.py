@@ -3,6 +3,7 @@ import time
 import pybullet_data
 
 physics_client = p.connect(p.GUI) # or p.DIRECT for non-graphical version
+
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 p.setGravity(0, 0, -9.81)
 
@@ -16,8 +17,6 @@ start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
 robot = p.loadURDF("panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
 
-table = p.loadURDF("writing_surface.urdf", [2,0,0], start_orientation, useFixedBase=True)
-
 NUM_JOINTS = 7
 JOINTS = [i for i in range(NUM_JOINTS)]
 
@@ -30,8 +29,7 @@ for i in range(NUM_JOINTS):
         targetValue = default_q[i]
     )
 
-    
-
+table = p.loadURDF("writing_surface.urdf", [2,0,0], start_orientation, useFixedBase=True)
 
 
 Kp = [900.0, 900.0, 900.0, 900.0, 375.0, 225.0, 100.0] #[700, 700, 700, 900, 700, 500, 300]
@@ -41,15 +39,12 @@ Kd = [45.0, 45.0, 45.0, 45.0, 15.0, 15.0, 10.0] #[45.0, 45.0, 45.0, 45.0, 15.0, 
 # Desired joint positions
 q_des = [1, -0.5, 0.1, -2, 0.1, 1.4, 0.5]
 
-# Check position
-# p.setJointMotorControlArray(
-#         bodyIndex=robot,[900.0, 900.0, 900.0, 900.0, 375.0, 225.0, 100.0]
-#         jointIndices=[0, 1, 2, 3, 4, 5, 6], 
-#         controlMode=p.POSITION_CONTROL,
-#         targetPositions= q_des,
-#         targetVelocities = [0.5 for _ in JOINTS],
-# )
 
+# Let simulation run a bit before starting movement
+for _ in range(100):
+    p.stepSimulation() # Default is 1/240hz
+
+    time.sleep(1/240)  # Match step simulation
 
 
 # Step the simulation for a while to observe the effect
