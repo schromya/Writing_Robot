@@ -1,0 +1,61 @@
+
+  
+import numpy as np
+from numpy.linalg import norm, solve
+
+import pybullet as p
+import time
+import pybullet_data
+
+import pinocchio as pin
+
+from ik import get_joint_positon
+
+model =  pin.buildModelFromUrdf('panda_arm_no_hand.urdf')
+data = model.createData()
+
+JOINT_ID = model.njoints - 1
+oMdes = pin.SE3( np.array([ # Rotation matrix (facing down)
+                    [1, 0, 0],
+                    [0, -1, 0],
+                    [0, 0, -1]
+                ]), 
+                 np.array([0.31, 0.00,  0.5]) # [X,Y, Z] # Default positions
+                 )
+
+q_curr = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785]) # Starting position
+q = get_joint_positon(q=q_curr, x= 0.31, y=0.00, z=0.5)
+print(q)
+print("------------------")
+
+physics_client = p.connect(p.GUI) # or p.DIRECT for non-graphical version
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+p.setGravity(0, 0, -9.81)
+
+# Load ground
+plane_ID = p.loadURDF("plane.urdf")
+
+# Load robot
+start_pos = [0,0,0]
+start_orientation = p.getQuaternionFromEuler([0,0,0])
+robot = p.loadURDF("panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
+
+
+#Check position
+p.setJointMotorControlArray(
+        bodyIndex=robot,
+        jointIndices=[0, 1, 2, 3, 4, 5, 6], 
+        controlMode=p.POSITION_CONTROL,
+        targetPositions= q,
+        targetVelocities = [0.6481366396349811, 1.2038791434804241, -0.7009613424828351, 2.0968243484246685, -0.7331872802150904, -1.1187633910821557, -0.020670192679890943],
+)
+
+
+# Step the simulation for a while to observe the effect
+while(True):
+    p.stepSimulation() # Default is 1/240hz
+    time.sleep(1/240)  # Match step simulation
+
+
+
+p.disconnect()
