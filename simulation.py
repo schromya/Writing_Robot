@@ -2,6 +2,8 @@ import pybullet as p
 import time
 import pybullet_data
 
+
+
 physics_client = p.connect(p.GUI) # or p.DIRECT for non-graphical version
 
 p.setAdditionalSearchPath(pybullet_data.getDataPath())

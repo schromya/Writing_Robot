@@ -7,7 +7,7 @@ import pybullet_data
 
 from ik import get_joint_positon
 
-q_curr = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785]) # Starting position
+q_curr = [0, -0.785, 0, -2.355, 0, 1.57, 0.785] # Starting position
 q = get_joint_positon(q=q_curr, x= 0.31, y=0.00, z=0.5)
 print(q)
 print("------------------")
