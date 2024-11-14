@@ -16,18 +16,30 @@ start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
 robot = p.loadURDF("panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
 
-table = p.loadURDF("writing_surface.urdf", [0.7,0,0], start_orientation, useFixedBase=True)
+table = p.loadURDF("writing_surface.urdf", [2,0,0], start_orientation, useFixedBase=True)
 
 NUM_JOINTS = 7
 JOINTS = [i for i in range(NUM_JOINTS)]
 
+# Start robot in "default" position to not exceed joint limits
+default_q = [0, -0.785, 0, -2.355, 0, 1.57, 0.785]
+for i in range(NUM_JOINTS):
+    p.resetJointState(
+        bodyUniqueId = robot,
+        jointIndex = i,
+        targetValue = default_q[i]
+    )
+
+    
+
 
 
 Kp = [900.0, 900.0, 900.0, 900.0, 375.0, 225.0, 100.0] #[700, 700, 700, 900, 700, 500, 300]
-Kd =  [20, 5, 7, 7, 3, 3, 0.1] #[45.0, 45.0, 45.0, 45.0, 15.0, 15.0, 10.0] 
+Kd = [45.0, 45.0, 45.0, 45.0, 15.0, 15.0, 10.0] #[45.0, 45.0, 45.0, 45.0, 15.0, 15.0, 10.0] 
+
 
 # Desired joint positions
-q_des = [0, -0.785, 0, -2.355, 0, 1.57, 0.785]
+q_des = [1, -0.5, 0.1, -2, 0.1, 1.4, 0.5]
 
 # Check position
 # p.setJointMotorControlArray(
@@ -46,9 +58,9 @@ while(True):
     # TODO: MAKE THESE NUMPY ARRAYS FOR matrix multiplication and speed
     q = [p.getJointState(robot, i)[0] for i in JOINTS]
     dq = [p.getJointState(robot, i)[1] for i in JOINTS]
-    e = [q_des[i] - q[i] for i in JOINTS]
+    e = [q[i] - q_des[i] for i in JOINTS]
 
-    u = [Kp[i] * e[i] + Kd[i] * dq[i] for i in JOINTS]
+    u = [-Kp[i] * e[i] - Kd[i] * dq[i] for i in JOINTS]
     
     p.setJointMotorControlArray(
         bodyIndex=robot,
@@ -57,6 +69,8 @@ while(True):
         forces = u
     )
 
+    print("q", q)
+    print("u", u)
 
     p.stepSimulation() # Default is 1/240hz
 

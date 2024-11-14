@@ -67,6 +67,8 @@ python3 panda_dynamics.py
 
 
 ## Resources
+https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA/edit?tab=t.0#heading=h.2ye70wns7io3
+
 https://github.com/bhtxy0525/A_Example_for_Calculating_Robot_Dynamics_Using_Pinocchio_Library/blob/main/README.md
 
 https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/devel/doxygen-html/md_doc_b-examples_i-inverse-kinematics.html

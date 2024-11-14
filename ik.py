@@ -18,10 +18,10 @@ oMdes = pin.SE3( np.array([ # Rotation matrix (facing down)
                     [0, -1, 0],
                     [0, 0, -1]
                 ]), 
-                 np.array([0.31, 0.00,  0.70]) # [X,Y, Z] # Default positions
+                 np.array([0.31, 0.00,  0.5]) # [X,Y, Z] # Default positions
                  )
 
-q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785])
+q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785]) # Starting position
 print(q)
 print("------------------")
 eps    = 1e-4
