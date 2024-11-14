@@ -2,6 +2,8 @@ import pybullet as p
 import time
 import pybullet_data
 
+from ik import get_joint_positon
+
 
 
 physics_client = p.connect(p.GUI) # or p.DIRECT for non-graphical version
@@ -42,11 +44,18 @@ table = p.loadURDF("writing_surface.urdf", [2,0,0], start_orientation, useFixedB
 
 
 # Last joint (doesn't really matter) and makes everything go funky so leaving at 0
-Kp = [1500.0, 1500.0, 900.0, 1500.0, 3000.0, 2000.0, 0] 
-Kd = [0, 0, 0, 0, 0, 0, 0] 
+# Kp = [1500.0, 1500.0, 900.0, 1500.0, 3000.0, 2000.0, 0] 
+# Kd = [0, 0, 0, 0, 0, 0, 0] 
+
+Kp = [1000.0, 1000.0, 900.0, 1000.0, 1000.0, 1000.0, 0] 
+Kd = [20, 20, 20, 20, 10, 10, 0] 
 
 # Desired joint positions
-q_des = [1, -0.5, 0.1, -2, 0.4, 1.4, 0.5]
+#q_des = [1, -0.5, 0.1, -2, 0.4, 1.4, 0.5]
+
+q_des = get_joint_positon(q=default_q, x= 0.31, y=0.00, z=0.5)
+print(q_des)
+print("------------------")
 
 
 # Let simulation run a bit before starting movement
