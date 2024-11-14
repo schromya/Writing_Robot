@@ -1,8 +1,21 @@
 import pybullet as p
 import time
+import math
 import pybullet_data
 
 from ik import get_joint_positon
+
+
+def get_trajectory_point(t):
+    """
+    Returns desired position at time t (seconds) to make circular trajectory
+    """
+    r = 0.25
+    w = 1 # rad/s
+
+    y_des = [r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.5] # X, Y, Z
+    return y_des
+
 
 
 
@@ -33,6 +46,7 @@ JOINTS = [i for i in range(NUM_JOINTS)]
 
 # Start robot in "default" position to not exceed joint limits
 default_q = [0, -0.785, 0, -2.355, 0, 1.57, 0.785]
+q = default_q
 for i in range(NUM_JOINTS):
     p.resetJointState(
         bodyUniqueId = robot,
@@ -53,9 +67,7 @@ Kd = [20, 20, 20, 20, 10, 10, 0]
 # Desired joint positions
 #q_des = [1, -0.5, 0.1, -2, 0.4, 1.4, 0.5]
 
-q_des = get_joint_positon(q=default_q, x= 0.31, y=0.00, z=0.5)
-print(q_des)
-print("------------------")
+
 
 
 # Let simulation run a bit before starting movement
@@ -64,9 +76,12 @@ for _ in range(100):
 
     time.sleep(1/240)  # Match step simulation
 
-
+time_sec = 0
 # Step the simulation for a while to observe the effect
 while(True):
+
+    y_des = get_trajectory_point(time_sec)
+    q_des = get_joint_positon(q=q, x=y_des[0], y=y_des[1], z=y_des[2])
 
     # TODO: MAKE THESE NUMPY ARRAYS FOR matrix multiplication and speed
     q = [p.getJointState(robot, i)[0] for i in JOINTS]
@@ -88,7 +103,7 @@ while(True):
     print("u", [round(num, 2) for num in u])
 
     p.stepSimulation() # Default is 1/240hz
-
+    time_sec += 1/240
     time.sleep(1/240)  # Match step simulation
 
 
