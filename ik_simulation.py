@@ -1,27 +1,11 @@
-
-  
 import numpy as np
-from numpy.linalg import norm, solve
 
 import pybullet as p
 import time
 import pybullet_data
 
-import pinocchio as pin
 
 from ik import get_joint_positon
-
-model =  pin.buildModelFromUrdf('panda_arm_no_hand.urdf')
-data = model.createData()
-
-JOINT_ID = model.njoints - 1
-oMdes = pin.SE3( np.array([ # Rotation matrix (facing down)
-                    [1, 0, 0],
-                    [0, -1, 0],
-                    [0, 0, -1]
-                ]), 
-                 np.array([0.31, 0.00,  0.5]) # [X,Y, Z] # Default positions
-                 )
 
 q_curr = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785]) # Starting position
 q = get_joint_positon(q=q_curr, x= 0.31, y=0.00, z=0.5)
