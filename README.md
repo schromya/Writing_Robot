@@ -76,3 +76,5 @@ https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/devel/doxygen-html/md_do
 https://gepettoweb.laas.fr/hpp/pinocchio/doxygen-html/index.html
 
 https://www.andre-gaschler.com/rotationconverter/   
+
+https://frankaemika.github.io/docs/control_parameters.html
