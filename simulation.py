@@ -16,6 +16,13 @@ plane_ID = p.loadURDF("plane.urdf")
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
 robot = p.loadURDF("panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
+num_joints = p.getNumJoints(robot)
+print(f"Number of Joints: {num_joints}")
+
+for joint_index in range(num_joints):
+    joint_info = p.getJointInfo(robot, joint_index)
+    print(f"Joint Index: {joint_info[0]}, Joint Name: {joint_info[1].decode('utf-8')}, Joint Type: {joint_info[2]}")
+
 
 NUM_JOINTS = 7
 JOINTS = [i for i in range(NUM_JOINTS)]
@@ -32,16 +39,12 @@ for i in range(NUM_JOINTS):
 table = p.loadURDF("writing_surface.urdf", [2,0,0], start_orientation, useFixedBase=True)
 
 
-# Kp = [900.0, 900.0, 900.0, 900.0, 375.0, 225.0, 100.0] #[700, 700, 700, 900, 700, 500, 300]
-# Kd = [45.0, 45.0, 45.0, 45.0, 15.0, 15.0, 10.0] #[45.0, 45.0, 45.0, 45.0, 15.0, 15.0, 10.0] 
-
-Kp = [0, 0, 0, 0, 0, 0, 100] 
+# Last joint (doesn't really matter) and makes everything go funky so leaving at 0
+Kp = [1500.0, 1500.0, 900.0, 1500.0, 3000.0, 2000.0, 0] 
 Kd = [0, 0, 0, 0, 0, 0, 0] 
 
-
-
 # Desired joint positions
-q_des = [1, -0.5, 0.1, -2, 0.1, 1.4, 0.5]
+q_des = [1, -0.5, 0.1, -2, 0.4, 1.4, 0.5]
 
 
 # Let simulation run a bit before starting movement
@@ -68,8 +71,10 @@ while(True):
         forces = u
     )
 
-    print("q", q)
-    print("u", u)
+    print("----")
+    print("q", [round(num, 2) for num in q])
+    print("e", [round(num, 2) for num in e])
+    print("u", [round(num, 2) for num in u])
 
     p.stepSimulation() # Default is 1/240hz
 
