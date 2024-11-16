@@ -2,7 +2,7 @@ import pinocchio as pin
 import numpy as np
 
 # Load the robot model from the URDF file and create data
-model = pin.buildModelFromUrdf('panda_arm_no_hand.urdf')
+model = pin.buildModelFromUrdf('urdfs/panda_arm_no_hand.urdf')
 data = model.createData()
 
 # Use the default configuration for the URDF, which is typically the zero position

@@ -18,7 +18,7 @@ def get_joint_positon(q:list, x:float, y:float, z:float):
     The orientation of the end effector is downward.
     """
     q = np.array(q)
-    model =  pin.buildModelFromUrdf('panda_arm_no_hand.urdf')
+    model =  pin.buildModelFromUrdf('urdfs/panda_arm_no_hand.urdf')
     data = model.createData()
 
     JOINT_ID = model.njoints - 1
