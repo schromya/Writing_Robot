@@ -2,8 +2,8 @@ import pybullet as p
 import time
 import math
 import pybullet_data
-
-from ik import get_joint_positon
+import numpy as np
+from PandaMechanics import PandaMechanics
 
 
 def get_trajectory_point(t):
@@ -62,7 +62,7 @@ Kp = [1000.0, 1000.0, 900.0, 1000.0, 1000.0, 1000.0, 0]
 Kd = [20, 20, 20, 20, 10, 10, 0]
 
 
-
+panda_mech = PandaMechanics()
 
 # Let simulation run a bit before starting movement
 for _ in range(100):
@@ -73,11 +73,11 @@ for _ in range(100):
 time_sec = 0
 # Step the simulation for a while to observe the effect
 
-p.setTimeStep(1/500)
+#p.setTimeStep(1/500)
 while(True):
 
     y_des = get_trajectory_point(time_sec)
-    q_des = get_joint_positon(q=q, x=y_des[0], y=y_des[1], z=y_des[2])
+    q_des = list(panda_mech.solve_ik(q=np.array(q), x=y_des[0], y=y_des[1], z=y_des[2]))
 
     # TODO: MAKE THESE NUMPY ARRAYS FOR matrix multiplication and speed
     q = [p.getJointState(robot, i)[0] for i in JOINTS]
@@ -92,14 +92,14 @@ while(True):
         forces = u
     )
 
-    print("----")
-    print("q", [round(num, 2) for num in q])
-    print("e", [round(num, 2) for num in e])
-    print("u", [round(num, 2) for num in u])
+    # print("----")
+    # print("q", [round(num, 2) for num in q])
+    # print("e", [round(num, 2) for num in e])
+    # print("u", [round(num, 2) for num in u])
 
     p.stepSimulation() # Default is 1/240hz
-    time_sec += 1/500
-    # time.sleep(1/240)  # Match step simulation # TODO: Double check this
+    time_sec += 1/240
+    time.sleep(1/240)  # Match step simulation # TODO: Double check this
 
 
 
