@@ -9,7 +9,6 @@
       <geometry>
         <mesh filename="meshes/visual/link0.dae"/>
       </geometry>
-      <material name="panda_gray"/>
     </visual>
     <collision>
       <geometry>
@@ -178,7 +177,7 @@
       <geometry>
         <mesh filename="meshes/visual/link7.dae"/>
       </geometry>
-      <material name="panda_gray"/>
+
     </visual>
     <collision>
       <geometry>
