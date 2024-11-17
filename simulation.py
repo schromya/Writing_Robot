@@ -6,6 +6,7 @@ import numpy as np
 
 from PandaMechanics import PandaMechanics
 from trajectory import get_trajectory_point
+from controller import PD
 
 
 
@@ -42,10 +43,6 @@ for i in range(NUM_JOINTS):
 table = p.loadURDF("urdfs/writing_surface.urdf", [1.0,0,0], start_orientation, useFixedBase=True)
 
 
-# Last joint (doesn't really matter) and makes everything go funky so leaving at 0
-Kp = np.array([1000.0, 1000.0, 900.0, 1000.0, 1000.0, 1000.0, 0])
-Kd = np.array([20, 20, 20, 20, 10, 10, 0])
-
 
 panda_mech = PandaMechanics()
 
@@ -55,14 +52,13 @@ TIME_STEP = 1/240
 p.setTimeStep(TIME_STEP)
 while(True):
 
-    y_des = get_trajectory_point(simulation_time)
-    q_des = panda_mech.solve_ik(q=q, x=y_des[0], y=y_des[1], z=y_des[2])
+    Y_des = get_trajectory_point(simulation_time)
+    q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
 
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
 
-    e = q - q_des
-    u = -Kp * e - Kd * dq
+    u = PD(q,dq, q_des)
     
     p.setJointMotorControlArray(
         bodyIndex=robot,
@@ -71,15 +67,10 @@ while(True):
         forces = u
     )
 
-    print("----")
-    print("q", q.round(2))
-    print("e", e.round(2))
-    print("u", u.round(2))
 
     p.stepSimulation() # Default is 1/240hz
     simulation_time += TIME_STEP
     time.sleep(TIME_STEP)  # Match simulation with real-life time
-
 
 
 p.disconnect()
