@@ -2,6 +2,7 @@ import numpy as np
 from numpy.linalg import norm, solve
 import pinocchio as pin
 
+
 class PandaMechanics():
     def __init__(self):
         self.model =  pin.buildModelFromUrdf('urdfs/panda_arm_no_hand.urdf')

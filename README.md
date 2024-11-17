@@ -39,16 +39,11 @@ docker run --rm -it -e  DISPLAY=host.docker.internal:0.0 --privileged -v ${PWD}:
 To run the simulation, make sure you are in this directory and run:
 
 ```bash
-python3 simulation.py
+python3 main.py
 ```
 
 You should see a window pop up with the simulation.
 
-To run get the panda dynamic G, M, and C, make sure you are in this directory and run:
-
-```bash
-python3 panda_dynamics.py
-```
 
 
 ## Docker Tips
