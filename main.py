@@ -9,7 +9,7 @@ import time
 
 from PandaMechanics import PandaMechanics
 from trajectory import circle_trajectory
-from controller import PD
+from controller import PD, PD_gravity
 
 
 # Set up simulator
@@ -42,7 +42,8 @@ while(True):
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
 
-    u = PD(q,dq, q_des)
+    #u = PD(q, dq, q_des)
+    u = PD_gravity(q, dq, q_des)
     
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
         controlMode=p.TORQUE_CONTROL, forces = u)
