@@ -4,12 +4,6 @@ FROM ubuntu:24.04
 # Set noninteractive to avoid prompts during the build
 ARG DEBIAN_FRONTEND=noninteractive
 
-# INSTALL PACKAGES
-# RUN apt-get update &&\
-#     apt-get install -y \
-#     curl\
-#     python3-pip
-
 RUN apt-get update && \
     apt-get upgrade -y  && \
     apt-get install -y \
@@ -21,13 +15,15 @@ RUN apt-get update && \
 	nano \
 	python3-numpy \
 	python3-yaml \
+	python3-tk \
 	&& rm -rf /var/lib/apt/lists/*
 
 
 # Install python packages (WARNING: Only use break-system-packages in container!!!!)
 RUN pip install --break-system-packages \
     pin\
-    pybullet
+    pybullet\
+	matplotlib
 
 WORKDIR /workspace/
 
