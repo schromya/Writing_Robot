@@ -58,7 +58,6 @@ class PandaMechanics():
         return np.array(q.flatten())
 
 
-
     def solve_fk(self, q:np.array) -> np.array:
         """
         Given the current joint positions, returns
@@ -73,17 +72,47 @@ class PandaMechanics():
         #         .format( name, *oMi.translation.T.flat )))
             
         return np.array(self.data.oMi[-1].translation.T.flat)
-        
+    
+
+    def get_M(self, q:np.array) -> np.array:
+        """
+        Returns M(q), the joint space inertia matrix.
+        """
+
+        M = pin.crba(self.model, self.data, q)
+        return M
+    
+
+    def get_C(self, q:np.array, dq:np.array) -> np.array:
+        """
+        Returns C(q, qdot), the Coriolis matrix.
+        """
+
+        C = pin.computeCoriolisMatrix(self.model, self.data, q, dq)
+        return C
+    
+
+    def get_G(self, q:np.array) -> np.array:
+        """
+        Returns G(q), the generalized gravity torque vector.
+        """
+        G = pin.computeGeneralizedGravity(self.model, self.data, q)
+        return G
+
 
 
 if __name__ == "__main__":
     # Example usage of This class
 
     q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785])
+    dq = np.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1])
 
     panda_mechanics = PandaMechanics()
 
     print("FK:", panda_mechanics.solve_fk(q))
-
     print("IK:", panda_mechanics.solve_ik(q=q, x=0.31, y=0.00, z=0.5))
+
+    print("M:", panda_mechanics.get_M(q))
+    print("C:", panda_mechanics.get_C(q, dq))
+    print("G:", panda_mechanics.get_G(q))
 
