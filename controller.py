@@ -34,8 +34,5 @@ def PD_gravity(q:np.array, dq:np.array, q_des:np.array):
     e = q - q_des
     u = -Kp * e - Kd * dq + G
 
-    print("e", e.round(decimals=2))
-    print("u", u.round(decimals=2))
-
     return u
 
