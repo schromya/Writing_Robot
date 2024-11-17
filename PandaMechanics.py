@@ -1,7 +1,5 @@
-  
 import numpy as np
 from numpy.linalg import norm, solve
-
 import pinocchio as pin
 
 class PandaMechanics():
