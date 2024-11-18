@@ -29,13 +29,18 @@ class PandaPlot():
         self.fig_planes, (self.ax_xy, self.ax_xz) = plt.subplots(1, 2, figsize=(12, 6))
 
         # Lines for xy and xz plots
-        self.line_xy, = self.ax_xy.plot([], [], label="XY Plane", color="green")
-        self.line_xz, = self.ax_xz.plot([], [], label="XZ Plane", color="blue")
-        
+        self.line_xy, = self.ax_xy.plot([], [], color="green")
+        self.line_xz, = self.ax_xz.plot([], [], color="blue")
+
+        # Lines for xy and xz plots
+        self.line_xy, = self.ax_xy.plot([], [], label="Y", color="green")
+        self.line_xy_des, = self.ax_xy.plot([], [], label="Y_des", color="red", linestyle="--")
+        self.line_xz, = self.ax_xz.plot([], [], label="Y", color="blue")
+        self.line_xz_des, = self.ax_xz.plot([], [], label="Y_des", color="orange", linestyle="--")
+
         # Data for xz and xy plots
         self.Y_history = [[] for _ in range(self.DIM)]
-        self.Y_des_history = [[] for _ in range(self.DIM)] 
-        
+        self.Y_des_history = [[] for _ in range(self.DIM)]
 
     def update_plot(self, t, q, q_des, Y, Y_des):
 
@@ -67,7 +72,8 @@ class PandaPlot():
             self.Y_des_history[i].append(Y_des[i])
         
         # Update XY Plane
-        self.line_xy.set_data(self.Y_history[0], self.Y_history[1])  # x vs y
+        self.line_xy.set_data(self.Y_history[0], self.Y_history[1])  # x vs y for Y
+        self.line_xy_des.set_data(self.Y_des_history[0], self.Y_des_history[1])  # x vs y for Y_des
         self.ax_xy.relim()
         self.ax_xy.autoscale_view()
         self.ax_xy.set_title("XY Plane")
@@ -77,7 +83,8 @@ class PandaPlot():
         self.ax_xy.legend(loc="upper left")
 
         # Update XZ Plane
-        self.line_xz.set_data(self.Y_history[0], self.Y_history[2])  # x vs z
+        self.line_xz.set_data(self.Y_history[0], self.Y_history[2])  # x vs z for Y
+        self.line_xz_des.set_data(self.Y_des_history[0], self.Y_des_history[2])  # x vs z for Y_des
         self.ax_xz.relim()
         self.ax_xz.autoscale_view()
         self.ax_xz.set_title("XZ Plane")
