@@ -47,15 +47,16 @@ for i in range(NUM_JOINTS):
 
 while(True):
 
-    
+    Y = panda_mech.solve_fk(q)
     Y_des = circle_trajectory(simulation_time)
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
+    
 
-     # Only plot ever so often to prevent simulation from slowing down
+    # Only plot ever so often to prevent simulation from slowing down
     if i % 40 == 0:
-        plot.update_plot(simulation_time, q, q_des)
+        plot.update_plot(simulation_time, q, q_des, Y, Y_des)
 
     #u = PD(q, dq, q_des)
     
