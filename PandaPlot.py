@@ -1,19 +1,32 @@
+
 import matplotlib.pyplot as plt
 import numpy as np
 import time
 
 class PandaPlot():
-    """"""
-        
-    def __init__(self, num_joints=7):
+    def __init__(self, num_joints=7, max_points=500):
         self.NUM_JOINTS = num_joints
-        self.DIM = 3 # Dimensions (x, y, z)
-        plt.ion()  
+        self.DIM = 3  # Dimensions (x, y, z)
+        self.max_points = max_points
+        self.update_counter = 0  # Counter to control refresh rate
+        plt.ion()
 
         # Figure for joint positions
         self.fig_joints, self.fig_axes = plt.subplots(self.NUM_JOINTS, 1, figsize=(8, 12))  # One subplot per joint
         self.fig_joints.tight_layout(pad=4.0)
-        
+        for ax in self.fig_axes:
+            ax.set_xlabel("Time (s)")
+            ax.set_ylabel("Position (rad)")
+            ax.grid(True)
+            ax.legend(loc="upper left")
+            ax.set_xlim(0, 60) 
+            ax.set_ylim(-3.14, 3.14) 
+
+        # Lines for joint positions
+        self.lines_q = [ax.plot([], [], label=f"Joint {i + 1} Position")[0] for i, ax in enumerate(self.fig_axes)]
+        self.lines_q_des = [ax.plot([], [], label=f"Joint {i + 1} Desired")[0] for i, ax in enumerate(self.fig_axes)]
+
+    
         # Lines for joint positions
         self.lines_q = [ax.plot([], [], label=f"Joint {i + 1} Position")[0] for i, ax in enumerate(self.fig_axes)]
         self.lines_q_des = [ax.plot([], [], label=f"Joint {i + 1} Desired")[0] for i, ax in enumerate(self.fig_axes)]
@@ -27,10 +40,20 @@ class PandaPlot():
         #################################################################################
         # Figure for xy and xz planes
         self.fig_planes, (self.ax_xy, self.ax_xz) = plt.subplots(1, 2, figsize=(12, 6))
+        for ax, title, xlabel, ylabel in [(self.ax_xy, "XY Plane", "X", "Y"), (self.ax_xz, "XZ Plane", "X", "Z")]:
+            ax.set_title(title)
+            ax.set_xlabel(xlabel)
+            ax.set_ylabel(ylabel)
+            ax.grid(True)
+            ax.legend(loc="upper left")
+            ax.set_xlim(-1, 1) 
+            ax.set_ylim(-1, 1) 
+
 
         # Lines for xy and xz plots
         self.line_xy, = self.ax_xy.plot([], [], color="green")
         self.line_xz, = self.ax_xz.plot([], [], color="blue")
+        
 
         # Lines for xy and xz plots
         self.line_xy, = self.ax_xy.plot([], [], label="Y", color="green")
@@ -56,15 +79,6 @@ class PandaPlot():
             self.lines_q[i].set_data(self.t_history, self.q_history[i])  
             self.lines_q_des[i].set_data(self.t_history, self.q_des_history[i])
 
-            # Adjust axis and labels
-            ax.relim()  # Recalculate limits
-            ax.autoscale_view()  # Adjust view to new data
-            ax.set_xlabel("Time (s)")
-            ax.set_ylabel("Position (rad)")
-            ax.grid(True)
-            ax.legend(loc="upper left")
-
-
         #################################################################################
         # Update plane data
         for i in range(self.DIM):
@@ -74,30 +88,14 @@ class PandaPlot():
         # Update XY Plane
         self.line_xy.set_data(self.Y_history[0], self.Y_history[1])  # x vs y for Y
         self.line_xy_des.set_data(self.Y_des_history[0], self.Y_des_history[1])  # x vs y for Y_des
-        self.ax_xy.relim()
-        self.ax_xy.autoscale_view()
-        self.ax_xy.set_title("XY Plane")
-        self.ax_xy.set_xlabel("X")
-        self.ax_xy.set_ylabel("Y")
-        self.ax_xy.grid(True)
-        self.ax_xy.legend(loc="upper left")
 
         # Update XZ Plane
         self.line_xz.set_data(self.Y_history[0], self.Y_history[2])  # x vs z for Y
         self.line_xz_des.set_data(self.Y_des_history[0], self.Y_des_history[2])  # x vs z for Y_des
-        self.ax_xz.relim()
-        self.ax_xz.autoscale_view()
-        self.ax_xz.set_title("XZ Plane")
-        self.ax_xz.set_xlabel("X")
-        self.ax_xz.set_ylabel("Z")
-        self.ax_xz.grid(True)
-        self.ax_xz.legend(loc="upper left")
 
 
         #################################################################################
         # Update figures
-        self.fig_joints.canvas.flush_events() 
-        self.fig_planes.canvas.flush_events()
         plt.pause(0.001)  # Allow time for plot updates
 
 if __name__ == "__main__":

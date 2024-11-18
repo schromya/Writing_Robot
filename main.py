@@ -35,15 +35,10 @@ i = 0
 panda_mech = PandaMechanics()
 plot = PandaPlot(NUM_JOINTS)
 
-
-
 # Start robot in "default" position to not exceed joint limits
 q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785])
 for i in range(NUM_JOINTS):
     p.resetJointState(bodyUniqueId = robot, jointIndex = i, targetValue = q[i])
-
-
-
 
 while(True):
 
@@ -54,12 +49,11 @@ while(True):
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
     
 
-    # Only plot ever so often to prevent simulation from slowing down
-    if i % 40 == 0:
+    # Only plot ever so often to reduce simulation slow down
+    if i % 80 == 0:
         plot.update_plot(simulation_time, q, q_des, Y, Y_des)
 
     #u = PD(q, dq, q_des)
-    
     u = PD_gravity(q, dq, q_des)
     
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
