@@ -11,3 +11,10 @@ def circle_trajectory(t:float) -> float:
 
     Y_des = [r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.5] # X, Y, Z
     return Y_des
+
+
+def point_trajectory() -> float:
+    """
+    
+    """
+    return [0.3,0.3,0.3]

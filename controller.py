@@ -55,8 +55,8 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     C = panda_mech.get_C(q, dq)
     G = panda_mech.get_G(q)
 
-    # Make sure these are all column vector
-    G = G[:, np.newaxis] # (TODO: do this in PandaMech?)
+    # Make sure these are all column vectors for matrix multiplication magic
+    G = G[:, np.newaxis] # (TODO: do this in PandaMechanics?)
     q = q[:, np.newaxis]
     dq = dq[:, np.newaxis]
     q_des = q_des[:, np.newaxis]
@@ -66,13 +66,12 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     
     # Error terms
     e = q - q_des  # Position error
-    print("q", q)
-    print("q_des", q_des)
-    print("e", e)
     de = dq - dq_des  # Velocity error
 
     # Weight matrices for QP formulation
-    Kp = np.eye(len(q)) * 50.0  # Proportional gain
+    # Kp = np.eye(len(q)) * 50.0  # Proportional gain
+    # Kd = np.eye(len(dq)) * 20.0  # Derivative gain
+    Kp = np.eye(len(q)) * 1000.0  # Proportional gain
     Kd = np.eye(len(dq)) * 20.0  # Derivative gain
     Q = np.eye(len(ddq_des)) * 1.0  # Weight on ddq
     R = np.eye(len(dq)) * 10.0  # Regularization weight
@@ -80,29 +79,25 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     # Desired joint-space acceleration (with error terms included)
     ddq_ref = ddq_des - Kp @ e - Kd @ de
 
- 
 
     # Quadratic cost function (to minimize norm of accelerations)
     H = 2 * (M + Q)
 
+    J = J[:3] # Only use first 3 rows
     
-    F = np.array([[0], [0], [Fz]])
-    print("F", F)
-
-    f = -(2 * (M @ ddq_ref + C @ dq + G - J.T @ F).T)
+    f = -(2 * (M @ ddq_ref + C @ dq + G - J.T @ np.array([[0], [0], [Fz]])).T)
     #f = -(2 * (M @ ddq_ref + C @ dq + G - J.T @ np.array([[0], [0], [Fz], [0], [0], [0]])).T)
 
-    print("f",f)
+
     # Solve QP problem for optimal joint accelerations
-    ddq_star = np.linalg.solve(H, -f)
+    ddq_star = np.linalg.solve(H, -f.T)
 
 
     # Compute torques
-    #u = M @ ddq_star + C @ dq + G - J.T @ np.array([0, 0, Fz])
-    # print("J1", J.T @ np.array([[0], [0], [Fz], [0], [0], [0]]))
-    # print("M @ ddq_star", M @ ddq_star)
-    u = M @ ddq_star + C @ dq + G - J.T @ np.array([[0], [0], [Fz], [0], [0], [0]])
-    # print("---u", u)
+    u = M @ ddq_star + C @ dq + G - J.T @ np.array([[0], [0], [Fz]])
 
-    
+    u = u.T[0]
+    print("---u",  u)
+
+
     return u

@@ -12,18 +12,18 @@ Now make sure docker is started.
 
 ### 2. Setup display forwarding
 
-**If you are on windows...**
+**If you are on Windows...**
 Install https://sourceforge.net/projects/vcxsrv/. Start XLaunch (from the VcXsrv program group), set display settings to multiple windows, and ensure "Disable access control" is checked.
 
-**If you are linux...**
+**If you are on Linux...**
 Set up display forwarding by running:
 ```bash
 xhost +local:
 ```
 ### 3. Build and Start The Container
-Now  build the container image and start the container. Make sure you are in this directories root directory. These commands use the current directory as the containers file system so any changes you make to the files on your host machine will be mirrored in the container. These commands also allow the containers display to be forwarded to your host machine so that you can see it.
+Now  build the container image and start the container. Make sure you are in this directories root directory. These commands use the current directory as the containers file system so any changes you make to the files on your host machine will be mirrored in the container. These commands also allow the container's display to be forwarded to your host machine so that you can see it.
 
-**If you are on linux...**
+**If you are on Linux...**
 ```bash
 sudo docker build -t robot-container .
 sudo docker run  --rm -it -e DISPLAY=$DISPLAY --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/workspace --net=host robot-container

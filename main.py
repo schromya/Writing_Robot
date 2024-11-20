@@ -9,7 +9,7 @@ import time
 
 from PandaMechanics import PandaMechanics
 from PandaPlot import PandaPlot
-from trajectory import circle_trajectory
+from trajectory import circle_trajectory, point_trajectory
 from controller import PD, PD_gravity, CLF_QP_with_error
 
 
@@ -42,7 +42,9 @@ for i in range(NUM_JOINTS):
 while(True):
 
     Y = panda_mech.solve_fk(q)
-    Y_des = circle_trajectory(simulation_time)
+    print("---Y", Y)
+    #Y_des = circle_trajectory(simulation_time)
+    Y_des = point_trajectory()
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
