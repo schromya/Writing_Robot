@@ -99,14 +99,6 @@ class PandaMechanics():
         return G
 
 
-    def get_Jacobian(self, q: np.array) -> np.array:
-        """
-        Returns the Jacobian of the end effector.
-        """
-        JOINT_ID = self.model.njoints - 1
-        J = pin.computeJointJacobian(self.model, self.data, q, JOINT_ID)
-        return J
-
 
 if __name__ == "__main__":
     # Example usage of This class
@@ -123,3 +115,13 @@ if __name__ == "__main__":
     print("C:", panda_mechanics.get_C(q, dq))
     print("G:", panda_mechanics.get_G(q))
 
+
+
+
+def get_Jacobian(self, q: np.array) -> np.array:
+    """
+    Computes the Jacobian of the end effector.
+    """
+    JOINT_ID = self.model.njoints - 1
+    J = pin.computeJointJacobian(self.model, self.data, q, JOINT_ID)
+    return J

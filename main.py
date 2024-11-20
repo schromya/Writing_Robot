@@ -10,8 +10,7 @@ import time
 from PandaMechanics import PandaMechanics
 from PandaPlot import PandaPlot
 from trajectory import circle_trajectory
-from controller import PD, PD_gravity
-
+from controller import PD, PD_gravity, CLF_QP_with_error
 
 
 # Set up simulator
@@ -47,14 +46,17 @@ while(True):
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
-    
+    J = panda_mech.get_Jacobian(q)
+    Fz = 1.0  # Desired force in the Z direction
 
     # Only plot ever so often to reduce simulation slow down
-    if i % 80 == 0:
-        plot.update_plot(simulation_time, q, q_des, Y, Y_des)
+    # if i % 80 == 0:
+    #     plot.update_plot(simulation_time, q, q_des, Y, Y_des)
 
     #u = PD(q, dq, q_des)
-    u = PD_gravity(q, dq, q_des)
+    #u = PD_gravity(q, dq, q_des)
+    u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
+
     
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
         controlMode=p.TORQUE_CONTROL, forces = u)
