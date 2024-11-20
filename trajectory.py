@@ -13,8 +13,15 @@ def circle_trajectory(t:float) -> float:
     return Y_des
 
 
-def point_trajectory() -> float:
+def point_trajectory(t) -> float:
     """
     
     """
-    return [0.3,0.3,0.3]
+
+    if t >= 3:
+        Y_des = [0.4, 0.0, 0.55]
+    else:
+        Y_des =  [0.3, 0.0 ,0.55]
+
+    return Y_des
+    

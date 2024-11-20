@@ -71,7 +71,7 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     # Weight matrices for QP formulation
     # Kp = np.eye(len(q)) * 50.0  # Proportional gain
     # Kd = np.eye(len(dq)) * 20.0  # Derivative gain
-    Kp = np.eye(len(q)) * 1000.0  # Proportional gain
+    Kp = np.eye(len(q)) * 50.0  # Proportional gain
     Kd = np.eye(len(dq)) * 20.0  # Derivative gain
     Q = np.eye(len(ddq_des)) * 1.0  # Weight on ddq
     R = np.eye(len(dq)) * 10.0  # Regularization weight
@@ -100,4 +100,4 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     print("---u",  u)
 
 
-    return u
+    return u * 40
