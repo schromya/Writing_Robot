@@ -1,7 +1,8 @@
 import math
+import numpy as np
 
 
-def circle_trajectory(t:float) -> float:
+def circle_trajectory(t:float) -> np.array:
     """
     Returns desired position at time t (seconds) to make circular trajectory
     with end effector.
@@ -9,19 +10,18 @@ def circle_trajectory(t:float) -> float:
     r = 0.25  # meters
     w = 0.50  # rad/s
 
-    Y_des = [r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.5] # X, Y, Z
+    Y_des = np.array([r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.65]) # X, Y, Z
     return Y_des
 
 
-def point_trajectory(t) -> float:
+def point_trajectory(t) -> np.array:
     """
     
     """
 
-    if t >= 3:
-        Y_des = [0.4, 0.0, 0.55]
-    else:
-        Y_des =  [0.3, 0.0 ,0.55]
 
-    return Y_des
+    # if t >= 3:
+    #     return np.array([0.4, 0.0, 0.55])
     
+    return np.array([0.3, 0.0 ,0.55])
+

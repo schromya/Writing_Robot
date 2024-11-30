@@ -71,10 +71,11 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     # Weight matrices for QP formulation
     # Kp = np.eye(len(q)) * 50.0  # Proportional gain
     # Kd = np.eye(len(dq)) * 20.0  # Derivative gain
-    Kp = np.eye(len(q)) * 50.0  # Proportional gain
-    Kd = np.eye(len(dq)) * 20.0  # Derivative gain
+    Kp = np.eye(len(q)) * 25000.0  # Proportional gain
+    Kd = np.eye(len(dq)) * 1.0  # Derivative gain
     Q = np.eye(len(ddq_des)) * 1.0  # Weight on ddq
-    R = np.eye(len(dq)) * 10.0  # Regularization weight
+    #R = np.diag([0.001, 0.001, 0.001, 0.001, 0.00001, 0.00001, 0.00001]) 
+    R = np.eye(len(dq)) * 10 # Regularization weight
 
     # Desired joint-space acceleration (with error terms included)
     ddq_ref = ddq_des - Kp @ e - Kd @ de
@@ -83,9 +84,9 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     # Quadratic cost function (to minimize norm of accelerations)
     H = 2 * (M + Q)
 
-    J = J[:3] # Only use first 3 rows
+    #J = J[:3] # Only use first 3 rows
     
-    f = -(2 * (M @ ddq_ref + C @ dq + G - J.T @ np.array([[0], [0], [Fz]])).T)
+    f = -(2 * (M @ ddq_ref + C @ dq + G - J.T @ np.array([[0], [0], [Fz], [0], [0], [0]])).T)
     #f = -(2 * (M @ ddq_ref + C @ dq + G - J.T @ np.array([[0], [0], [Fz], [0], [0], [0]])).T)
 
 
@@ -94,10 +95,10 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
 
 
     # Compute torques
-    u = M @ ddq_star + C @ dq + G - J.T @ np.array([[0], [0], [Fz]])
+    u = M @ ddq_star + C @ dq + G - J.T @ np.array([[0], [0], [Fz], [0], [0], [0]])
 
-    u = u.T[0]
-    print("---u",  u)
+    u = u.T[0] 
+    print("---u",  u.round(2))
 
 
-    return u * 40
+    return u 
