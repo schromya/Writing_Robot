@@ -1,114 +1,70 @@
-"""
-Runs simulation of Panda 7-DOF robot arm following trajectory
-"""
-
-import pybullet as p
-import pybullet_data
 import numpy as np
-import time
-
 from PandaMechanics import PandaMechanics
+from controller import CLF_QP_with_error
 from PandaPlot import PandaPlot
-from trajectory import circle_trajectory, point_trajectory
-from controller import PD, PD_gravity, CLF_QP_with_error
+
+# Initialize robot mechanics and controller
+robot_mechanics = PandaMechanics()
 
 
-# Set up simulator
-TIME_STEP = 1/240
-physics_client = p.connect(p.GUI) 
-p.setAdditionalSearchPath(pybullet_data.getDataPath())
-p.setGravity(0, 0, -9.81)
-p.setTimeStep(TIME_STEP)
+# Simulation parameters
+dt = 0.01
+num_steps = 1000
 
-# Load URDFs
-plane_ID = p.loadURDF("plane.urdf")
-start_pos = [0,0,0]
-start_orientation = p.getQuaternionFromEuler([0,0,0])
-robot = p.loadURDF("urdfs/panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
-table = p.loadURDF("urdfs/writing_surface.urdf", [0.4,0,0], start_orientation, useFixedBase=True)
+# Initial state
+q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785])  # Example initial joint positions
+dq = np.zeros_like(q)
 
-NUM_JOINTS = p.getNumJoints(robot) - 1
-JOINTS = [i for i in range(NUM_JOINTS)]
-simulation_time = 0
-i = 0
-panda_mech = PandaMechanics()
-plot = PandaPlot(NUM_JOINTS)
+# Desired pose (end effector position)
+desired_pose = np.array([0.3, 0.0, 0.5])  # Start with a position above the table
 
-# Start robot in "default" position to not exceed joint limits
-q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785])
-for i in range(NUM_JOINTS):
-    p.resetJointState(bodyUniqueId = robot, jointIndex = i, targetValue = q[i])
+# Simulation log
+positions = []
+velocities = []
+forces = []
 
-for _ in range(100):
-    p.stepSimulation() # Default is 1/240hz
-    simulation_time += TIME_STEP
-    time.sleep(TIME_STEP)  # Match simulation with real-life time
-
-# PD controller to get to table
-total_error = 10 # Large Number
-while total_error > 0.001:
-
-
-    Y = panda_mech.solve_fk(q)
-    print("Y", Y.round(2))
-    Y_des = [0.3, 0.0 ,0.55]
-    q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
-    q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
-    dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
-
-
-    # Only plot ever so often to reduce simulation slow down
-    # if i % 80 == 0:
-    #     plot.update_plot(simulation_time, q, q_des, Y, Y_des)
-
-    u = PD(q, dq, q_des)
-    #u = PD_gravity(q, dq, q_des)
-    print("u", u.round(2))
-
-    total_error = np.sum(np.square(Y_des - Y))
-    print("total_error", total_error.round(2))
-    print("e", (Y_des - Y).round(2))
-
-    p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
-        controlMode=p.TORQUE_CONTROL, forces = u)
-
-    p.stepSimulation() # Default is 1/240hz
-    simulation_time += TIME_STEP
-    i +=1
-    time.sleep(TIME_STEP)  # Match simulation with real-life time
-
-print("FINISHED PD CONTROL!!!!")
-
-# # Force controller while on table
-# while True:
-
-
-#     Y = panda_mech.solve_fk(q)
-#     print("---Y", Y)
-#     #Y_des = circle_trajectory(simulation_time)
-#     Y_des = point_trajectory(simulation_time)
-#     print("---Y_des", Y_des)
-#     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
-#     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
-#     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
-#     J = panda_mech.get_Jacobian(q)
-#     Fz = 1.0  # Desired force in the Z direction
-
-#     # Only plot ever so often to reduce simulation slow down
-#     # if i % 80 == 0:
-#     #     plot.update_plot(simulation_time, q, q_des, Y, Y_des)
-
-#     #u = PD(q, dq, q_des)
-#     #u = PD_gravity(q, dq, q_des)
-#     u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
-
+# Simulation loop
+for step in range(num_steps):
+    # Solve forward kinematics to get current end effector position
+    end_effector_position = robot_mechanics.solve_fk(q)
     
-#     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
-#         controlMode=p.TORQUE_CONTROL, forces = u)
+    # Determine contact state (e.g., when end effector reaches the table height)
+    contact_state = end_effector_position[2] <= 0.5  # Table height is 0.5m
 
-#     p.stepSimulation() # Default is 1/240hz
-#     simulation_time += TIME_STEP
-#     i +=1
-#     time.sleep(TIME_STEP)  # Match simulation with real-life time
+    # Adjust desired pose based on contact state
+    if contact_state:
+        # Maintain desired x, y and contact force in z direction
+        desired_force = np.array([0.0, 0.0, 1.0])  # fz = 1.0 N when in contact
+    else:
+        desired_force = np.array([0.0, 0.0, 0.0])  # fz = 0 N when not in contact
 
-# p.disconnect()
+    # Compute control torques using the CLFQP controller
+    torques = CLF_QP_with_error(q, dq, desired_pose, contact_state)
+
+    # Simulate the robot's dynamics
+    M = robot_mechanics.get_M(q)
+    C = robot_mechanics.get_C(q, dq)
+    G = robot_mechanics.get_G(q)
+    ddq = np.linalg.solve(M, torques - C @ dq - G)
+
+    # Update states using simple integration
+    dq += ddq * dt
+    q += dq * dt
+
+    # Log data for visualization
+    positions.append(q.copy())
+    velocities.append(dq.copy())
+    forces.append(desired_force.copy())
+
+    # Print debug information
+    if step % 100 == 0:
+        print(f"Step {step}: Position = {end_effector_position}, Contact = {contact_state}")
+
+# # Visualization
+# positions = np.array(positions)
+# velocities = np.array(velocities)
+# forces = np.array(forces)
+
+# plotter = PandaPlot()
+# plotter.plot_joint_trajectories(positions, title="Joint Trajectories")
+# plotter.plot_end_effector_trajectory(positions, title="End Effector Trajectory")
