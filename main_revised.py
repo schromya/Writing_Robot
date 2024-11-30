@@ -62,7 +62,6 @@ while(True):
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
     J = panda_mech.get_Jacobian(q)
-    Fz = 1.0  # Desired force in the Z direction
 
     # Only plot ever so often to reduce simulation slow down
     # if i % 80 == 0:
