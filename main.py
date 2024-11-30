@@ -44,29 +44,31 @@ for _ in range(100):
     simulation_time += TIME_STEP
     time.sleep(TIME_STEP)  # Match simulation with real-life time
 
-while(True):
+# PD controller to get to table
+total_error = 10 # Large Number
+while total_error > 0.001:
 
 
     Y = panda_mech.solve_fk(q)
-    print("---Y", Y)
-    #Y_des = circle_trajectory(simulation_time)
-    Y_des = point_trajectory(simulation_time)
-    print("---Y_des", Y_des)
+    print("Y", Y.round(2))
+    Y_des = [0.3, 0.0 ,0.55]
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
-    J = panda_mech.get_Jacobian(q)
-    Fz = 1.0  # Desired force in the Z direction
+
 
     # Only plot ever so often to reduce simulation slow down
     # if i % 80 == 0:
     #     plot.update_plot(simulation_time, q, q_des, Y, Y_des)
 
-    #u = PD(q, dq, q_des)
+    u = PD(q, dq, q_des)
     #u = PD_gravity(q, dq, q_des)
-    u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
+    print("u", u.round(2))
 
-    
+    total_error = np.sum(np.square(Y_des - Y))
+    print("total_error", total_error.round(2))
+    print("e", (Y_des - Y).round(2))
+
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
         controlMode=p.TORQUE_CONTROL, forces = u)
 
@@ -75,4 +77,38 @@ while(True):
     i +=1
     time.sleep(TIME_STEP)  # Match simulation with real-life time
 
-p.disconnect()
+print("FINISHED PD CONTROL!!!!")
+
+# # Force controller while on table
+# while True:
+
+
+#     Y = panda_mech.solve_fk(q)
+#     print("---Y", Y)
+#     #Y_des = circle_trajectory(simulation_time)
+#     Y_des = point_trajectory(simulation_time)
+#     print("---Y_des", Y_des)
+#     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
+#     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
+#     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
+#     J = panda_mech.get_Jacobian(q)
+#     Fz = 1.0  # Desired force in the Z direction
+
+#     # Only plot ever so often to reduce simulation slow down
+#     # if i % 80 == 0:
+#     #     plot.update_plot(simulation_time, q, q_des, Y, Y_des)
+
+#     #u = PD(q, dq, q_des)
+#     #u = PD_gravity(q, dq, q_des)
+#     u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
+
+    
+#     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
+#         controlMode=p.TORQUE_CONTROL, forces = u)
+
+#     p.stepSimulation() # Default is 1/240hz
+#     simulation_time += TIME_STEP
+#     i +=1
+#     time.sleep(TIME_STEP)  # Match simulation with real-life time
+
+# p.disconnect()
