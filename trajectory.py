@@ -10,7 +10,7 @@ def circle_trajectory(t:float) -> np.array:
     r = 0.15  # circle radius (meters)
     w = 0.50  # rad/s
 
-    Y_des = np.array([r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.65]) # X, Y, Z
+    Y_des = np.array([r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.62]) # X, Y, Z
     return Y_des
 
 

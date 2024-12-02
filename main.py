@@ -49,7 +49,7 @@ while(True):
     Y = panda_mech.solve_fk(q)
 
     print("Z", Y[2])
-    contact_state = Y[2] <= 0.7  # Table height is 0.65m
+    contact_state = Y[2] <= 0.7  # For buffer (Table height is 0.62m)
     Fz = 1 if contact_state else 0
     
 
