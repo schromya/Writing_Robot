@@ -38,7 +38,7 @@ RUN pip install future\
     urdf-parser-py\
     panda_robot\
     pin\
-    numpy==1.23
+    numpy==1.21\
 
 
 # Install Rust
