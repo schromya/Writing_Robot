@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from parse_svg_path import parse_svg_for_paths, scale_coords_to_arena 
 
 
 def circle_trajectory(t:float) -> np.array:
@@ -24,4 +25,25 @@ def point_trajectory(t) -> np.array:
     #     return np.array([0.4, 0.0, 0.55])
     
     return np.array([0.3, 0.0 ,0.55])
+
+
+def svg_trajectory(t) -> np.array:
+    dx = 0.4
+    dy = 0.4
+    x_min= 0.2
+    z_min = 0.6
+
+
+    svg_file = 'svg/swirl.svg'
+
+    svg_coords = parse_svg_for_paths(svg_file)
+    scaled_coords = np.array(scale_coords_to_arena(svg_coords, dx=dx, dy=dy, x_min=x_min, z_min=z_min))
+
+    i = math.floor(t / 0.1) # Calculate the index for every 0.1 seconds
+
+    if i < len(scaled_coords):
+        return np.array(scaled_coords[i])
+    
+    return np.array(scaled_coords[-1])
+
 

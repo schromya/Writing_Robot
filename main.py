@@ -9,7 +9,7 @@ import time
 
 from PandaMechanics import PandaMechanics
 from PandaPlot import PandaPlot
-from trajectory import circle_trajectory, point_trajectory
+from trajectory import circle_trajectory, point_trajectory, svg_trajectory
 from controller import PD, PD_gravity, CLF_QP_with_error
 
 
@@ -53,8 +53,9 @@ while(True):
     Fz = 1 if contact_state else 0
     
 
-    Y_des = circle_trajectory(simulation_time)
+    # Y_des = circle_trajectory(simulation_time)
     #Y_des = point_trajectory(simulation_time)
+    Y_des = svg_trajectory(simulation_time)
 
     print("---Fz", Fz)
     #print("---Y", Y.round(2))
