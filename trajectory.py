@@ -7,7 +7,7 @@ def circle_trajectory(t:float) -> np.array:
     Returns desired position at time t (seconds) to make circular trajectory
     with end effector.
     """
-    r = 0.25  # meters
+    r = 0.15  # circle radius (meters)
     w = 0.50  # rad/s
 
     Y_des = np.array([r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.65]) # X, Y, Z
