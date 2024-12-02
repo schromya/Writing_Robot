@@ -1,0 +1,1 @@
+/workspace/devel/.private/franka_gripper/share/roseus/ros/franka_gripper/msg/StopResult.l

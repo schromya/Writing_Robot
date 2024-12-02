@@ -1,0 +1,1 @@
+/workspace/devel/.private/panda_sim_moveit/lib/pkgconfig/panda_sim_moveit.pc

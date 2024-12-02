@@ -1,0 +1,1 @@
+/workspace/devel/.private/panda_gazebo/lib/pkgconfig/panda_gazebo.pc

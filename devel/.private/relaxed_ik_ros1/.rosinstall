@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /workspace/devel/.private/relaxed_ik_ros1/setup.sh

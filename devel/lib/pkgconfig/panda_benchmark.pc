@@ -1,0 +1,1 @@
+/workspace/devel/.private/panda_benchmark/lib/pkgconfig/panda_benchmark.pc
