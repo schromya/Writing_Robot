@@ -27,6 +27,7 @@ find_package(catkin REQUIRED COMPONENTS
   visualization_msgs
 )
 
+
 find_package(Eigen3 REQUIRED)
 find_package(Franka 0.9.0 QUIET)
 if(NOT Franka_FOUND)
@@ -89,6 +90,8 @@ target_include_directories(panda_benchmark SYSTEM PUBLIC
 target_include_directories(panda_benchmark PUBLIC
   include
 )
+
+
 
 
 ## Installation

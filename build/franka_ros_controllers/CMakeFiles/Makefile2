@@ -203,6 +203,11 @@ gtest/googletest/clean: gtest/googletest/CMakeFiles/gtest.dir/clean
 # Target rules for target CMakeFiles/franka_ros_controllers.dir
 
 # All Build rule for target.
+CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/franka_ros_controllers_gencfg.dir/all
+CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/sensor_msgs_generate_messages_py.dir/all
+CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/all
+CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/sensor_msgs_generate_messages_cpp.dir/all
+CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/trajectory_msgs_generate_messages_nodejs.dir/all
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/trajectory_msgs_generate_messages_lisp.dir/all
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/trajectory_msgs_generate_messages_cpp.dir/all
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/control_msgs_generate_messages_py.dir/all
@@ -212,11 +217,6 @@ CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/dynamic_reconfigure_genera
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/all
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/std_srvs_generate_messages_lisp.dir/all
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/std_msgs_generate_messages_py.dir/all
-CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/franka_ros_controllers_gencfg.dir/all
-CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/sensor_msgs_generate_messages_py.dir/all
-CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/all
-CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/sensor_msgs_generate_messages_cpp.dir/all
-CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/trajectory_msgs_generate_messages_nodejs.dir/all
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/franka_core_msgs_generate_messages_nodejs.dir/all
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
 CMakeFiles/franka_ros_controllers.dir/all: CMakeFiles/geometry_msgs_generate_messages_eus.dir/all

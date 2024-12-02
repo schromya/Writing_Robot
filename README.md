@@ -34,13 +34,33 @@ sudo docker run  --rm -it -e DISPLAY=$DISPLAY --privileged -v /tmp/.X11-unix:/tm
 docker build -t robot-container .
 docker run --rm -it -e  DISPLAY=host.docker.internal:0.0 --privileged -v ${PWD}:/workspace --net=host robot-container
 ```
+### 3. Setting up Container
+Now your container should be running and you should be in its terminal. But wait, there's more. You still have to do some container setup for ROS:
+```bash
+source /opt/ros/noetic/setup.sh
+cd src/relaxed_ik_ros1/relaxed_ik_core
+cargo build
+
+cd /workspace
+catkin build
+source devel/setup.sh
+
+chmod +x /workspace/src/panda_benchmark/scripts/*
+```
 
 ## Running
-To run the simulation, make sure you are in this directory and run:
+Now, to run the simulation, do the following.
+
 
 ```bash
-python3 main.py
+roslaunch panda_benchmark simulation.launch 
+
+# Run the following in another  terminal to move the bot to a position
+source devel/setup.sh
+rosrun panda_benchmark main.py 
 ```
+
+Note: If you get `lbGL error: MESA-LOADER: failed to retrieve device information` and Gazebo does not launch, please run `export LIBGL_ALWAYS_SOFTWARE=1` and you can try running the below commands again.
 
 You should see a window pop up with the simulation.
 
@@ -56,8 +76,7 @@ You should see a window pop up with the simulation.
     docker exec -it  <YOUR_CONTAINER_ID> bash
 
     # Source ROS properly
-    source /opt/ros/jazzy/setup.sh
-    source install/setup.bash
+    source devel/setup.sh
     ```
 
 
@@ -73,3 +92,7 @@ https://gepettoweb.laas.fr/hpp/pinocchio/doxygen-html/index.html
 https://www.andre-gaschler.com/rotationconverter/   
 
 https://frankaemika.github.io/docs/control_parameters.html
+
+https://stack-of-tasks.github.io/pinocchio/download.html
+
+https://docs.ros.org/en/jazzy/p/pinocchio/

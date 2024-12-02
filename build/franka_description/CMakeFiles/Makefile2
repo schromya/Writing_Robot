@@ -501,8 +501,8 @@ CMakeFiles/run_tests_franka_description.dir/clean:
 
 # All Build rule for target.
 CMakeFiles/_run_tests_franka_description_nosetests.dir/all: CMakeFiles/_run_tests_franka_description_nosetests_test.hand_urdf.py.dir/all
-CMakeFiles/_run_tests_franka_description_nosetests.dir/all: CMakeFiles/_run_tests_franka_description_nosetests_test.panda_arm_urdf.py.dir/all
 CMakeFiles/_run_tests_franka_description_nosetests.dir/all: CMakeFiles/_run_tests_franka_description_nosetests_test.dual_panda_example_urdf.py.dir/all
+CMakeFiles/_run_tests_franka_description_nosetests.dir/all: CMakeFiles/_run_tests_franka_description_nosetests_test.panda_arm_urdf.py.dir/all
 	$(MAKE) -f CMakeFiles/_run_tests_franka_description_nosetests.dir/build.make CMakeFiles/_run_tests_franka_description_nosetests.dir/depend
 	$(MAKE) -f CMakeFiles/_run_tests_franka_description_nosetests.dir/build.make CMakeFiles/_run_tests_franka_description_nosetests.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/workspace/build/franka_description/CMakeFiles --progress-num= "Built target _run_tests_franka_description_nosetests"

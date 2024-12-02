@@ -1,0 +1,11 @@
+[31m[1mCMake Error[0m at /workspace/src/panda_benchmark/CMakeLists.txt:95 (target_link_libraries):
+  The keyword signature for target_link_libraries has already been used with
+  the target "panda_benchmark".  All uses of target_link_libraries with a
+  target must be either all-keyword or all-plain.
+
+  The uses of the keyword signature are here:
+
+   * CMakeLists.txt:81 (target_link_libraries)
+
+
+

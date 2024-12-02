@@ -35,6 +35,7 @@
   <depend>urdf</depend>
   <depend>visualization_msgs</depend>
   <depend>relaxed_ik_ros1</depend>
+  <depend>pinocchio</depend>
 
   <exec_depend>franka_control</exec_depend>
   <exec_depend>franka_description</exec_depend>

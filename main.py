@@ -7,7 +7,7 @@ import pybullet_data
 import numpy as np
 import time
 
-from PandaMechanics import PandaMechanics
+from src.panda_benchmark.scripts.PandaMechanics import PandaMechanics
 from PandaPlot import PandaPlot
 from trajectory import circle_trajectory, point_trajectory
 from controller import PD, PD_gravity, CLF_QP_with_error

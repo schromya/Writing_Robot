@@ -33,8 +33,46 @@ Not searching for unused variables given on the command line.
 [36m--[0m catkin 0.8.10
 [36m--[0m BUILD_SHARED_LIBS is on
 [36m--[0m Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+[36m--[0m pinocchio FOUND. pinocchio at /opt/ros/noetic/lib/libpinocchio.so
+[36m--[0m boost_filesystem FOUND. boost_filesystem at /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+[36m--[0m boost_serialization FOUND. boost_serialization at /usr/lib/x86_64-linux-gnu/libboost_serialization.so
+[36m--[0m boost_system FOUND. boost_system at /usr/lib/x86_64-linux-gnu/libboost_system.so
+[36m--[0m Found Boost: /usr/include (found version "1.71.0") found components: filesystem serialization system
+[36m--[0m eigenpy FOUND. eigenpy at /opt/ros/noetic/lib/x86_64-linux-gnu/libeigenpy.so
+[36m--[0m Checking for NumPy
+[36m--[0m   NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include
+[36m--[0m   NUMPY_VERSION=1.21.0
+[36m--[0m Found Python3: /usr/bin/python3 (found version "3.8.10") found components: Interpreter NumPy Development
+[36m--[0m PythonLibraryDirs: /usr/lib/x86_64-linux-gnu
+[36m--[0m PythonLibVersionString: 3.8.10
+[36m--[0m Python site lib: lib/python3.8/dist-packages
+[36m--[0m Python include dirs: /usr/include/python3.8
+[36m--[0m Checking for NumPy
+[36m--[0m   NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include
+[36m--[0m   NUMPY_VERSION=1.21.0
+[36m--[0m NumPy include dir: /usr/local/lib/python3.8/dist-packages/numpy/core/include
+[36m--[0m Found Boost: /usr/include (found version "1.71.0") found components: python38
+[36m--[0m Boost_PYTHON_LIBRARY: /usr/lib/x86_64-linux-gnu/libboost_python38.so
+[36m--[0m Default C++ standard: 201402
+[36m--[0m Minimal C++ standard upgraded to 11
+[36m--[0m C++ standard sufficient: Minimal required 11, currently defined: 14
+[36m--[0m hpp-fcl FOUND. hpp-fcl at /opt/ros/noetic/lib/x86_64-linux-gnu/libhpp-fcl.so
+[36m--[0m Found Boost: /usr/include (found version "1.71.0") found components: chrono serialization filesystem
+[36m--[0m C++ standard sufficient: Minimal required 11, currently defined: 14
+[36m--[0m C++ standard sufficient: Minimal required 11, currently defined: 14
 [36m--[0m Check if compiler accepts -pthread
 [36m--[0m Check if compiler accepts -pthread - yes
-[36m--[0m Configuring done
-[36m--[0m Generating done
-[36m--[0m Build files have been written to: /workspace/build/panda_benchmark
+[31m[1mCMake Error[0m at /workspace/src/panda_benchmark/CMakeLists.txt:95 (target_link_libraries):
+  The keyword signature for target_link_libraries has already been used with
+  the target "panda_benchmark".  All uses of target_link_libraries with a
+  target must be either all-keyword or all-plain.
+
+  The uses of the keyword signature are here:
+
+   * CMakeLists.txt:81 (target_link_libraries)
+
+
+
+[36m--[0m Configuring incomplete, errors occurred!
+See also "/workspace/build/panda_benchmark/CMakeFiles/CMakeOutput.log".
+See also "/workspace/build/panda_benchmark/CMakeFiles/CMakeError.log".

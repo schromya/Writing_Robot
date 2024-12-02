@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_FLAGS = -O3 -DNDEBUG -fPIC   -std=gnu++14
 
-CXX_DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"panda_benchmark\" -Dpanda_benchmark_EXPORTS
+CXX_DEFINES = -DBOOST_MPL_LIMIT_LIST_SIZE=30 -DBOOST_MPL_LIMIT_VECTOR_SIZE=30 -DHPP_FCL_HAS_OCTOMAP -DHPP_FCL_HAVE_OCTOMAP -DOCTOMAP_MAJOR_VERSION=1 -DOCTOMAP_MINOR_VERSION=9 -DOCTOMAP_PATCH_VERSION=3 -DPINOCCHIO_WITH_HPP_FCL -DPINOCCHIO_WITH_URDFDOM -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"panda_benchmark\" -Dpanda_benchmark_EXPORTS
 
 CXX_INCLUDES = -I/workspace/src/panda_benchmark/include -isystem /workspace/devel/.private/franka_msgs/include -isystem /workspace/devel/.private/franka_gripper/include -isystem /workspace/devel/.private/relaxed_ik_ros1/include -isystem /workspace/src/franka_ros/franka_gripper/include -isystem /workspace/src/franka_ros/franka_hw/include -isystem /opt/ros/noetic/include -isystem /opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -isystem /usr/include/eigen3 
 

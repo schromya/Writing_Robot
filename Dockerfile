@@ -23,15 +23,22 @@ RUN apt-get update && \
     ros-noetic-joint-state-controller\
     ros-noetic-moveit\
     ros-noetic-moveit-commander\
-    ros-noetic-moveit-visual-tools
+    ros-noetic-moveit-visual-tools\
+    lsb-release \
+	libglew-dev \
+	libpython3.8-dev\
+	python3-yaml \
+	python3-tk 
 
+RUN python3 -m pip install --upgrade pip
 
 # Install python packages
 RUN pip install future\
     PyYaml\
     urdf-parser-py\
     panda_robot\
-    numpy==1.21
+    pin\
+    numpy==1.23
 
 
 # Install Rust
