@@ -9,8 +9,18 @@ def PD(q:np.array, dq:np.array, q_des:np.array):
     """
 
     # Last joint (doesn't really matter) and makes everything go funky so leaving at 0
-    Kp = np.array([1000.0, 1000.0, 900.0, 1000.0, 1000.0, 1000.0, 0])
-    Kd = np.array([20, 20, 20, 20, 10, 10, 0])
+
+    # 240 hz
+    # Kp = np.array([1000.0, 1000.0, 900.0, 1000.0, 1000.0, 1000.0, 0])
+    # Kd = np.array([20, 20, 20, 20, 10, 10, 0])
+
+    # 1000 hz
+    Kp = np.array([7000, 5000, 5000, 5000, 5000, 5000, 1000] )
+    Kd = np.array([20, 20, 20, 20, 10, 10, 10])
+
+    # 5,000 - 10,000 hz
+    # Kp = np.array([10000, 50000, 50000, 50000, 50000, 50000, 1000] )
+    # Kd = np.array([20, 20, 20, 20, 10, 10, 10])
     
     e = q - q_des
     u = -Kp * e - Kd * dq
@@ -98,7 +108,4 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     u = M @ ddq_star + C @ dq + G - J.T @ np.array([[0], [0], [Fz], [0], [0], [0]])
 
     u = u.T[0] 
-    print("---u",  u.round(2))
-
-
     return u 

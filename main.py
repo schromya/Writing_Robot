@@ -14,7 +14,7 @@ from controller import PD, PD_gravity, CLF_QP_with_error
 
 
 # Set up simulator
-TIME_STEP = 1/240
+TIME_STEP = 1/1000
 physics_client = p.connect(p.GUI) 
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 p.setGravity(0, 0, -9.81)
@@ -24,7 +24,7 @@ p.setTimeStep(TIME_STEP)
 plane_ID = p.loadURDF("plane.urdf")
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
-robot = p.loadURDF("urdfs/panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
+robot = p.loadURDF("urdfs/panda_arm_no_hand2.urdf", start_pos, start_orientation, useFixedBase=True)
 table = p.loadURDF("urdfs/writing_surface.urdf", [0.4,0,0], start_orientation, useFixedBase=True)
 
 NUM_JOINTS = p.getNumJoints(robot) - 1
@@ -48,7 +48,8 @@ while(True):
 
     Y = panda_mech.solve_fk(q)
 
-    contact_state = Y[2] <= 0.65  # Table height is 0.65m
+    print("Z", Y[2])
+    contact_state = Y[2] <= 0.7  # Table height is 0.65m
     Fz = 1 if contact_state else 0
     
 
@@ -56,8 +57,8 @@ while(True):
     #Y_des = point_trajectory(simulation_time)
 
     print("---Fz", Fz)
-    print("---Y", Y.round(2))
-    print("---Y_des", Y_des)
+    #print("---Y", Y.round(2))
+    #print("---Y_des", Y_des)
     
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
@@ -65,13 +66,13 @@ while(True):
     J = panda_mech.get_Jacobian(q)
 
     # Only plot ever so often to reduce simulation slow down
-    if i % 80 == 0:
+    if i % 200 == 0:
         plot.update_plot(simulation_time, q, q_des, Y, Y_des)
 
     #u = PD(q, dq, q_des)
     #u = PD_gravity(q, dq, q_des)
     u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
-
+    #print("----U",  u.round(2))
     
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
         controlMode=p.TORQUE_CONTROL, forces = u)

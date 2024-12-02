@@ -23,8 +23,8 @@ class PandaPlot():
             ax.set_ylim(-3.14, 3.14) 
 
         # Lines for joint positions
-        self.lines_q = [ax.plot([], [], label=f"Joint {i + 1} Position")[0] for i, ax in enumerate(self.fig_axes)]
-        self.lines_q_des = [ax.plot([], [], label=f"Joint {i + 1} Desired")[0] for i, ax in enumerate(self.fig_axes)]
+        self.lines_q = [ax.plot([], [], color="green", label=f"Joint {i + 1} Position")[0] for i, ax in enumerate(self.fig_axes)]
+        self.lines_q_des = [ax.plot([], [], color="orange", label=f"Joint {i + 1} Desired")[0] for i, ax in enumerate(self.fig_axes)]
 
     
         # Lines for joint positions
@@ -48,17 +48,12 @@ class PandaPlot():
             ax.legend(loc="upper left")
             ax.set_xlim(-1, 1) 
             ax.set_ylim(-1, 1) 
-
-
-        # Lines for xy and xz plots
-        self.line_xy, = self.ax_xy.plot([], [], color="green")
-        self.line_xz, = self.ax_xz.plot([], [], color="blue")
         
 
         # Lines for xy and xz plots
         self.line_xy, = self.ax_xy.plot([], [], label="Y", color="green")
-        self.line_xy_des, = self.ax_xy.plot([], [], label="Y_des", color="red", linestyle="--")
-        self.line_xz, = self.ax_xz.plot([], [], label="Y", color="blue")
+        self.line_xy_des, = self.ax_xy.plot([], [], label="Y_des", color="orange", linestyle="--")
+        self.line_xz, = self.ax_xz.plot([], [], label="Y", color="green")
         self.line_xz_des, = self.ax_xz.plot([], [], label="Y_des", color="orange", linestyle="--")
 
         # Data for xz and xy plots
