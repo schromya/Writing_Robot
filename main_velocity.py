@@ -10,7 +10,7 @@ import time
 from PandaMechanics import PandaMechanics
 from PandaPlot import PandaPlot
 from trajectory import circle_trajectory, point_trajectory, svg_trajectory
-from controller import PD, PD_gravity, CLF_QP_with_error
+from controller import PD, PD_gravity, CLF_QP_with_error, PD_velocity
 
 
 # Set up simulator
@@ -25,7 +25,8 @@ plane_ID = p.loadURDF("plane.urdf")
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
 robot = p.loadURDF("urdfs/panda_arm_no_hand2.urdf", start_pos, start_orientation, useFixedBase=True)
-table = p.loadURDF("urdfs/writing_surface.urdf", [0.4,0,0], start_orientation, useFixedBase=True)
+table = p.loadURDF("urdfs/writing_surface.urdf", [1.4,0,0], start_orientation, useFixedBase=True)
+
 
 NUM_JOINTS = p.getNumJoints(robot) - 1
 JOINTS = [i for i in range(NUM_JOINTS)]
@@ -48,14 +49,14 @@ while(True):
 
     Y = panda_mech.solve_fk(q)
 
-
+    # print("Z", Y[2])
     contact_state = Y[2] <= 0.7  # For buffer (Table height is 0.62m)
     Fz = 1 if contact_state else 0
     
 
-    # Y_des = circle_trajectory(simulation_time)
+    Y_des = circle_trajectory(simulation_time)
     #Y_des = point_trajectory(simulation_time)
-    Y_des = svg_trajectory(simulation_time)
+    #Y_des = svg_trajectory(simulation_time)
 
     # print("---Fz", Fz)
     #print("---Y", Y.round(2))
@@ -72,11 +73,11 @@ while(True):
 
     #u = PD(q, dq, q_des)
     #u = PD_gravity(q, dq, q_des)
-    u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
+    v = PD_velocity(q, dq, q_des)
     #print("----U",  u.round(2))
     
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
-        controlMode=p.TORQUE_CONTROL, forces = u)
+        controlMode=p.VELOCITY_CONTROL, targetVelocities = v)
 
     p.stepSimulation() # Default is 1/240hz
     simulation_time += TIME_STEP
