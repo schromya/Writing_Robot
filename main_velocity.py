@@ -25,7 +25,7 @@ plane_ID = p.loadURDF("plane.urdf")
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
 robot = p.loadURDF("urdfs/panda_arm_no_hand2.urdf", start_pos, start_orientation, useFixedBase=True)
-table = p.loadURDF("urdfs/writing_surface.urdf", [1.4,0,0], start_orientation, useFixedBase=True)
+table = p.loadURDF("urdfs/writing_surface.urdf", [0.45,0,0], start_orientation, useFixedBase=True)
 
 
 NUM_JOINTS = p.getNumJoints(robot) - 1
@@ -54,9 +54,9 @@ while(True):
     Fz = 1 if contact_state else 0
     
 
-    Y_des = circle_trajectory(simulation_time)
+    #Y_des = circle_trajectory(simulation_time)
     #Y_des = point_trajectory(simulation_time)
-    #Y_des = svg_trajectory(simulation_time)
+    Y_des = svg_trajectory(simulation_time)
 
     # print("---Fz", Fz)
     #print("---Y", Y.round(2))
