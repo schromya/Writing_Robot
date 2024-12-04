@@ -113,7 +113,7 @@ def parse_svg_for_paths(svg_file):
                         incr = 1
                 
                 ii += incr
-    
+    print("HERERE---", svg_coords)
     svg_coords = np.append(svg_coords, [current_point + np.array([0.,0.,0.05])], axis=0)
                 
     return svg_coords
