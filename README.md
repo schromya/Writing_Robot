@@ -29,7 +29,7 @@ sudo docker build -t robot-container .
 sudo docker run  --rm -it -e DISPLAY=$DISPLAY --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/workspace --net=host robot-container
 ```
 
-**If you are on Windows...**
+**If you are on Windows Powershell...**
 ```bash
 docker build -t robot-container .
 docker run --rm -it -e  DISPLAY=host.docker.internal:0.0 --privileged -v ${PWD}:/workspace --net=host robot-container
