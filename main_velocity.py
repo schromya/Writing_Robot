@@ -19,6 +19,10 @@ physics_client = p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 p.setGravity(0, 0, -9.81)
 p.setTimeStep(TIME_STEP)
+p.resetDebugVisualizerCamera(cameraDistance=1,
+                             cameraYaw=-20,
+                             cameraPitch=-40,
+                             cameraTargetPosition=[0, 0, 0.6])
 
 # Load URDFs
 plane_ID = p.loadURDF("plane.urdf")
@@ -51,7 +55,6 @@ while(True):
     contact_points = p.getContactPoints(bodyA=robot, bodyB=table)
     for contact in contact_points:
         contact_position = contact[5]  # Contact position in world coordinates (x, y, z)
-        contact_normal = contact[7]  # Normal at contact point
         
         p.addUserDebugLine(
             lineFromXYZ=contact_position,
