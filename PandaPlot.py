@@ -46,8 +46,8 @@ class PandaPlot():
             ax.set_ylabel(ylabel)
             ax.grid(True)
             ax.legend(loc="upper left")
-            ax.set_xlim(-1, 1) 
-            ax.set_ylim(-1, 1) 
+            ax.set_xlim(-0.7, 0.7) 
+            ax.set_ylim(0.1, 0.8) 
         
         # Invert the y for displaying letters nicely
         self.ax_yx.invert_xaxis()

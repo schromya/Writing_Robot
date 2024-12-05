@@ -13,7 +13,7 @@ from trajectory import circle_trajectory, point_trajectory, svg_trajectory
 from controller import PD, PD_gravity, CLF_QP_with_error, PD_velocity
 
 # UPDATE THIS TO CHANGE SVGs
-SVG_FILE = "svg/b.svg"
+SVG_FILE = "svg/hey.svg"
 
 # Set up simulator
 TIME_STEP = 1/1000
@@ -53,7 +53,7 @@ for _ in range(100):
 
 while(True):
     
-    # Check for contact points visualize them
+    # Visualize first contact point
     contact_points = p.getContactPoints(bodyA=robot, bodyB=table)
     for contact in contact_points:
         contact_position = contact[5]  # Contact position in world coordinates (x, y, z)
