@@ -46,6 +46,20 @@ for _ in range(100):
     time.sleep(TIME_STEP)  # Match simulation with real-life time
 
 while(True):
+    
+    # Check for contact points visualize them
+    contact_points = p.getContactPoints(bodyA=robot, bodyB=table)
+    for contact in contact_points:
+        contact_position = contact[5]  # Contact position in world coordinates (x, y, z)
+        contact_normal = contact[7]  # Normal at contact point
+        
+        p.addUserDebugLine(
+            lineFromXYZ=contact_position,
+            lineToXYZ=(contact_position[0], contact_position[1], contact_position[2] + 0.001),
+            lineColorRGB=[1, 0, 0],
+            lineWidth=5,
+            lifeTime=100,  # Seconds
+        )
 
     Y = panda_mech.solve_fk(q)
 

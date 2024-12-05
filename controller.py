@@ -103,7 +103,7 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     # Kd = np.eye(len(dq)) * 20.0  # Derivative gain
     Kp = np.eye(len(q)) * 25000.0  # Proportional gain
     Kd = np.eye(len(dq)) * 1.0  # Derivative gain
-    Q = np.eye(len(ddq_des)) * 1.0  # Weight on ddq
+    Q = np.diag([.1, .2, .4, .6, .8, 1, 1.2])   # Weight on ddq
     #R = np.diag([0.001, 0.001, 0.001, 0.001, 0.00001, 0.00001, 0.00001]) 
     R = np.eye(len(dq)) * 10 # Regularization weight
 
@@ -128,4 +128,5 @@ def CLF_QP_with_error(q: np.array, dq: np.array, q_des: np.array, dq_des: np.arr
     u = M @ ddq_star + C @ dq + G - J.T @ np.array([[0], [0], [Fz], [0], [0], [0]])
 
     u = u.T[0] 
+    print("u", u.round(2))
     return u 
