@@ -12,6 +12,8 @@ from PandaPlot import PandaPlot
 from trajectory import circle_trajectory, point_trajectory, svg_trajectory
 from controller import PD, PD_gravity, CLF_QP_with_error, PD_velocity
 
+# UPDATE THIS TO CHANGE SVGs
+SVG_FILE = "svg/b.svg"
 
 # Set up simulator
 TIME_STEP = 1/1000
@@ -66,14 +68,13 @@ while(True):
 
     Y = panda_mech.solve_fk(q)
 
-    # print("Z", Y[2])
     contact_state = Y[2] <= 0.7  # For buffer (Table height is 0.62m)
     Fz = 1 if contact_state else 0
     
 
     #Y_des = circle_trajectory(simulation_time)
     #Y_des = point_trajectory(simulation_time)
-    Y_des = svg_trajectory(simulation_time)
+    Y_des = svg_trajectory(simulation_time, SVG_FILE)
 
     # print("---Fz", Fz)
     #print("---Y", Y.round(2))

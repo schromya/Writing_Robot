@@ -39,8 +39,8 @@ class PandaPlot():
 
         #################################################################################
         # Figure for xy and xz planes
-        self.fig_planes, (self.ax_xy, self.ax_xz) = plt.subplots(1, 2, figsize=(12, 6))
-        for ax, title, xlabel, ylabel in [(self.ax_xy, "XY Plane", "X", "Y"), (self.ax_xz, "XZ Plane", "X", "Z")]:
+        self.fig_planes, (self.ax_yx, self.ax_xz) = plt.subplots(1, 2, figsize=(12, 6))
+        for ax, title, xlabel, ylabel in [(self.ax_yx, "XY Plane", "Y", "X"), (self.ax_xz, "XZ Plane", "X", "Z")]:
             ax.set_title(title)
             ax.set_xlabel(xlabel)
             ax.set_ylabel(ylabel)
@@ -49,10 +49,12 @@ class PandaPlot():
             ax.set_xlim(-1, 1) 
             ax.set_ylim(-1, 1) 
         
+        # Invert the y for displaying letters nicely
+        self.ax_yx.invert_xaxis()
 
-        # Lines for xy and xz plots
-        self.line_xy, = self.ax_xy.plot([], [], label="Y", color="green")
-        self.line_xy_des, = self.ax_xy.plot([], [], label="Y_des", color="orange", linestyle="--")
+        # Lines for yx and xz plots
+        self.line_yx, = self.ax_yx.plot([], [], label="Y", color="green")
+        self.line_yx_des, = self.ax_yx.plot([], [], label="Y_des", color="orange", linestyle="--")
         self.line_xz, = self.ax_xz.plot([], [], label="Y", color="green")
         self.line_xz_des, = self.ax_xz.plot([], [], label="Y_des", color="orange", linestyle="--")
 
@@ -80,9 +82,9 @@ class PandaPlot():
             self.Y_history[i].append(Y[i])
             self.Y_des_history[i].append(Y_des[i])
         
-        # Update XY Plane
-        self.line_xy.set_data(self.Y_history[0], self.Y_history[1])  # x vs y for Y
-        self.line_xy_des.set_data(self.Y_des_history[0], self.Y_des_history[1])  # x vs y for Y_des
+        # Update YZ Plane
+        self.line_yx.set_data(self.Y_history[1], self.Y_history[0])  # y vs x
+        self.line_yx_des.set_data(self.Y_des_history[1], self.Y_des_history[0])  
 
         # Update XZ Plane
         self.line_xz.set_data(self.Y_history[0], self.Y_history[2])  # x vs z for Y
