@@ -11,7 +11,8 @@ def circle_trajectory(t:float) -> np.array:
     r = 0.15  # circle radius (meters)
     w = 0.50  # rad/s
 
-    Y_des = np.array([r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.62]) # X, Y, Z
+    Y_des = np.array([r* math.cos(w*t) + 0.4, r*math.sin(w*t), 0.62,
+                      -3.14, 0, 0]) # X, Y, Z, roll, pitch, yaw
     return Y_des
 
 
@@ -24,7 +25,8 @@ def point_trajectory(t) -> np.array:
     # if t >= 3:
     #     return np.array([0.4, 0.0, 0.55])
     
-    return np.array([0.3, 0.0 ,0.55])
+    return np.array([0.3, 0.0 ,0.55,
+                     -3.14, 0, 0])
 
 
 def svg_trajectory(t, svg_path) -> np.array:
@@ -39,8 +41,8 @@ def svg_trajectory(t, svg_path) -> np.array:
     i = math.floor(t / 0.1) # Calculate the index for every 0.1 seconds
 
     if i < len(scaled_coords):
-        return np.array(scaled_coords[i])
+        return np.array(scaled_coords[i] + [-3.14, 0, 0])
     
-    return np.array(scaled_coords[-1])
+    return np.array(scaled_coords[-1] + [-3.14, 0, 0])
 
 

@@ -24,7 +24,7 @@ p.setTimeStep(TIME_STEP)
 plane_ID = p.loadURDF("plane.urdf")
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
-robot = p.loadURDF("urdfs/panda_arm_no_hand2.urdf", start_pos, start_orientation, useFixedBase=True)
+robot = p.loadURDF("urdfs/panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
 table = p.loadURDF("urdfs/writing_surface.urdf", [0.4,0,0], start_orientation, useFixedBase=True)
 
 NUM_JOINTS = p.getNumJoints(robot) - 1
@@ -37,6 +37,7 @@ taskController = TaskSpaceController(panda_mech=panda_mech)
 
 # Start robot in "default" position to not exceed joint limits
 q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785])
+dq = np.array([0] * 7)
 for i in range(NUM_JOINTS):
     p.resetJointState(bodyUniqueId = robot, jointIndex = i, targetValue = q[i])
 
@@ -49,19 +50,15 @@ while(True):
 
     Y = panda_mech.solve_fk(q)
 
-
     contact_state = Y[2] <= 0.7  # For buffer (Table height is 0.62m)
     Fz = -1 if contact_state else 0
     
 
     Y_des = circle_trajectory(simulation_time)
+
     #Y_des = point_trajectory(simulation_time)
     #Y_des = svg_trajectory(simulation_time)
 
-    # print("---Fz", Fz)
-    #print("---Y", Y.round(2))
-    #print("---Y_des", Y_des)
-    
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
     dq_des = np.array([0.1] * 7)
     ddq_des = np.array([0.001] * 7)
@@ -76,7 +73,7 @@ while(True):
     #u = PD(q, dq, q_des)
     #u = PD_gravity(q, dq, q_des)
     #u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
-    u = taskController.optimize(q, dq, q_des, dq_des, ddq_des, Fz)
+    u = taskController.optimize(Y, Y_des, q, dq, ddq_des, Fz)
     #print("----U",  u.round(2))
     
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 

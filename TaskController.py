@@ -10,7 +10,7 @@ class TaskSpaceController:
         self.w2 = w2  # Weight for Fz
         self.w3 = w3  # Weight for y'' - Kp * y - Kd * y'
 
-    def objective_function(self, x, q, Fz_d, Kp, Kd):
+    def objective_function(self, x, y, q, dq, Fz_d, Kp, Kd):
         """
         The objective function to minimize:
         J = w1 * ||u||^2 + w2 * (Fz - Fz_d)^2 + w3 * ||y'' - Kp * y - Kd * y'||^2
@@ -18,7 +18,9 @@ class TaskSpaceController:
         # Extracting optimization variables
         u = x[:len(q)]  # Control input vector (forces/torques)
         Fz = x[len(q):len(q) + 1]  # Vertical force (scalar)
-        y = x[len(q) + 1:]  # Trajectory (e.g., positions)
+        ddy = x[len(q) + 1:]  # Trajectory (e.g., positions)
+
+        dy = self.panda_mech.solve_fk_velocity(q, dq)
 
         # The term ||u||^2
         u_norm = np.linalg.norm(u)**2
@@ -27,14 +29,7 @@ class TaskSpaceController:
         Fz_term = (Fz - Fz_d)**2
 
         # The term ||y'' - Kp * y - Kd * y'||^2 (approximating y'' by finite difference)
-
-        # TODO: This isn't working correctly but keeping for now
-        y_dot = np.diff(y, 1)
-        y_dot= np.pad(y_dot, (0, 1), mode='constant', constant_values=0)
-
-        y_ddot = np.diff(y, 2)  # Second derivative (approximating y'')
-        y_ddot= np.pad(y_ddot, (1, 1), mode='constant', constant_values=0)
-        y_term = np.linalg.norm(y_ddot - Kp * y - Kd * y_dot)**2
+        y_term = np.linalg.norm(ddy - Kp * y - Kd * dy)**2
 
         # Objective function to minimize
         return self.w1 * u_norm + self.w2 * Fz_term + self.w3 * y_term
@@ -75,20 +70,21 @@ class TaskSpaceController:
         return np.sum(np.abs(left_side - right_side))
 
 
-    def optimize(self, q, dq, q_des, dq_des, ddq_des, Fz_d):
+    def optimize(self, Y, Y_des, q, dq, ddq_des, Fz_d):
         """Solve the optimization problem to get the optimal u, Fz, and trajectory."""
         
-        y_dim = 6 # X, Y, Z, roll, pitch, yaw
-        Kp = np.array([100] * y_dim) * 100.0  # Proportional gain
-        Kd = np.array([100] * y_dim) * 1.0  # Derivative gain
+        y = Y - Y_des
+        ddy_dim = 6 # X, Y, Z, roll, pitch, yaw
+        Kp = np.array([100] * ddy_dim) * 100.0  # Proportional gain
+        Kd = np.array([100] * ddy_dim) * 1.0  # Derivative gain
 
         J = self.panda_mech.get_Jacobian(q)
 
-        # Initial guess for optimization (u, Fz, y)
-        x0 = np.zeros(len(q) + 1 + y_dim)  # Initial guess for u, Fz, and trajectory y
+        # Initial guess for optimization (u, Fz, y'')
+        x0 = np.zeros(len(q) + 1 + ddy_dim)  # Initial guess for u, Fz, and trajectory y
 
         # Define the bounds for u and Fz (optional)
-        bounds = [(None, None)] * len(q) + [(None, None)] * 1 + [(None, None)] * y_dim
+        bounds = [(None, None)] * len(q) + [(None, None)] * 1 + [(None, None)] * ddy_dim
 
         # Define constraints
         cons = [{'type': 'ineq', 'fun': self.in_constraint_upper, 'args': (q, )},
@@ -96,7 +92,7 @@ class TaskSpaceController:
                 {'type': 'eq', 'fun': self.equality_constraint, 'args': (q, dq, ddq_des, J)}]
 
         # Minimize the objective function using a suitable optimizer (e.g., SLSQP)
-        result = minimize(self.objective_function, x0, args=(q, Fz_d, Kp, Kd, ),
+        result = minimize(self.objective_function, x0, args=(y, q, dq, Fz_d, Kp, Kd, ),
                           method='SLSQP', constraints=cons, bounds=bounds)
 
         # The result will contain the optimized u, Fz, and y (trajectory)

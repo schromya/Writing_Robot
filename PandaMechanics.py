@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.linalg import norm, solve
 import pinocchio as pin
+from scipy.spatial.transform import Rotation as R
 
 
 class PandaMechanics():
@@ -60,18 +61,29 @@ class PandaMechanics():
     def solve_fk(self, q:np.array) -> np.array:
         """
         Given the current joint positions, returns
-        the end effector position.
+        the end effector position x/y/z (in meters) and roll/pitch/yaw (in radians)
         """
 
         pin.forwardKinematics(self.model, self.data, q)
+
+        oMi = self.data.oMi[-1]  # Transformation of the last link
+        position = oMi.translation.T.flat
+        rotation_matrix = oMi.rotation
+
+        # Convert the rotation matrix to roll, pitch, yaw (RPY)
+        rpy = R.from_matrix(rotation_matrix).as_euler('xyz', degrees=False)
         
-        # # Print out the placement of each joint of the kinematic tree 
-        # for name, oMi in zip(self.model.names, self.data.oMi):
-        #     print(("{:<24} : {: .2f} {: .2f} {: .2f}"
-        #         .format( name, *oMi.translation.T.flat )))
-            
-        return np.array(self.data.oMi[-1].translation.T.flat)
+        return np.hstack((position, rpy))
     
+    def solve_fk_velocity(self, q: np.array, dq: np.array) -> np.array:
+        """
+        Given the current joint positions and velocities,
+        returns the end-effector velocity (linear and angular).
+        """
+        J = self.get_Jacobian(q)
+        velocity = J @ dq
+
+        return velocity  
 
     def get_M(self, q:np.array) -> np.array:
         """
@@ -112,7 +124,6 @@ class PandaMechanics():
         Returns the derivative of the Jacobian of the end effector (J-dot).
         """
 
-        J = self.get_Jacobian(q)
         J_dot = pin.computeFrameJacobianDot(self.model, self.data, q, dq, pin.ReferenceFrame.LOCAL)
         return J_dot
 
