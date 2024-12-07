@@ -26,12 +26,22 @@ p.resetDebugVisualizerCamera(cameraDistance=1,
                              cameraPitch=-40,
                              cameraTargetPosition=[0, 0, 0.6])
 
+
 # Load URDFs
 plane_ID = p.loadURDF("plane.urdf")
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
 robot = p.loadURDF("urdfs/panda_arm_no_hand2.urdf", start_pos, start_orientation, useFixedBase=True)
 table = p.loadURDF("urdfs/writing_surface.urdf", [0.45,0,0], start_orientation, useFixedBase=True)
+
+print(p.getLinkStates(bodyUniqueId=table, linkIndices=[0,1,2,3,4,5]))
+# for joint in range(5):
+#     print(p.getJointInfo(bodyUniqueId=table, jointIndex=joint))
+
+
+exit()
+
+p.changeDynamics(bodyUniqueId=table, linkIndex=0, lateralFriction=0)
 
 
 NUM_JOINTS = p.getNumJoints(robot) - 1
@@ -54,17 +64,17 @@ for _ in range(100):
 while(True):
     
     # Visualize first contact point
-    contact_points = p.getContactPoints(bodyA=robot, bodyB=table)
-    for contact in contact_points:
-        contact_position = contact[5]  # Contact position in world coordinates (x, y, z)
+    # contact_points = p.getContactPoints(bodyA=robot, bodyB=table)
+    # for contact in contact_points:
+    #     contact_position = contact[5]  # Contact position in world coordinates (x, y, z)
         
-        p.addUserDebugLine(
-            lineFromXYZ=contact_position,
-            lineToXYZ=(contact_position[0], contact_position[1], contact_position[2] + 0.001),
-            lineColorRGB=[1, 0, 0],
-            lineWidth=5,
-            lifeTime=100,  # Seconds
-        )
+    #     p.addUserDebugLine(
+    #         lineFromXYZ=contact_position,
+    #         lineToXYZ=(contact_position[0], contact_position[1], contact_position[2] + 0.001),
+    #         lineColorRGB=[1, 0, 0],
+    #         lineWidth=5,
+    #         lifeTime=100,  # Seconds
+    #     )
 
     Y = panda_mech.solve_fk(q)
 
