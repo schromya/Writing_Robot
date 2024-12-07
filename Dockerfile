@@ -23,7 +23,8 @@ RUN apt-get update && \
 RUN pip install --break-system-packages \
     pin\
     pybullet\
-	matplotlib
+	matplotlib\
+	scipy
 
 WORKDIR /workspace/
 

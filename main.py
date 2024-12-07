@@ -11,7 +11,7 @@ from PandaMechanics import PandaMechanics
 from PandaPlot import PandaPlot
 from trajectory import circle_trajectory, point_trajectory, svg_trajectory
 from controller import PD, PD_gravity, CLF_QP_with_error
-
+from TaskController import TaskSpaceController
 
 # Set up simulator
 TIME_STEP = 1/1000
@@ -33,6 +33,7 @@ simulation_time = 0
 i = 0
 panda_mech = PandaMechanics()
 plot = PandaPlot(NUM_JOINTS)
+taskController = TaskSpaceController(panda_mech=panda_mech)
 
 # Start robot in "default" position to not exceed joint limits
 q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785])
@@ -62,6 +63,8 @@ while(True):
     #print("---Y_des", Y_des)
     
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
+    dq_des = np.array([0.1] * 7)
+    ddq_des = np.array([0.001] * 7)
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
     J = panda_mech.get_Jacobian(q)
@@ -72,7 +75,8 @@ while(True):
 
     #u = PD(q, dq, q_des)
     #u = PD_gravity(q, dq, q_des)
-    u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
+    #u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
+    u = taskController.optimize(q, dq, q_des, dq_des, ddq_des, Fz)
     #print("----U",  u.round(2))
     
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
