@@ -34,10 +34,6 @@ class TaskSpaceController:
 
         y_ddot = np.diff(y, 2)  # Second derivative (approximating y'')
         y_ddot= np.pad(y_ddot, (1, 1), mode='constant', constant_values=0)
-        print("y", y)
-        print("y_dot", y_dot)
-        print("y_ddot", y_ddot)
-        print("Kp * y", Kp * y)
         y_term = np.linalg.norm(y_ddot - Kp * y - Kd * y_dot)**2
 
         # Objective function to minimize
@@ -72,9 +68,11 @@ class TaskSpaceController:
 
         F = np.array([[0], [0], Fz, [0], [0], [0]])
         right_side = u + J.T @ F
-        
+
         # The equality constraint should be zero
-        return np.allclose(left_side, right_side)
+        #return np.allclose(left_side, right_side)
+        # Absolute sum so that can minimize
+        return np.sum(np.abs(left_side - right_side))
 
 
     def optimize(self, q, dq, q_des, dq_des, ddq_des, Fz_d):
@@ -88,7 +86,6 @@ class TaskSpaceController:
 
         # Initial guess for optimization (u, Fz, y)
         x0 = np.zeros(len(q) + 1 + y_dim)  # Initial guess for u, Fz, and trajectory y
-        print("-----x0", x0)
 
         # Define the bounds for u and Fz (optional)
         bounds = [(None, None)] * len(q) + [(None, None)] * 1 + [(None, None)] * y_dim
@@ -106,5 +103,6 @@ class TaskSpaceController:
         u_opt = result.x[:len(q)]  # Optimized control input
         Fz_opt = result.x[len(q):len(q) + 1]  # Optimized vertical force
         y_opt = result.x[len(q) + 1:]  # Optimized trajectory
-        u = u_opt.T[0]
+        u = u_opt.T
+        print("Opt u", u.round(2))
         return u
