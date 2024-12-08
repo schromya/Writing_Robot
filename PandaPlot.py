@@ -14,6 +14,11 @@ class PandaPlot():
         # Figure for joint positions
         self.fig_joints, self.fig_axes = plt.subplots(self.NUM_JOINTS, 1, figsize=(8, 12))  # One subplot per joint
         self.fig_joints.tight_layout(pad=4.0)
+                
+        # Lines for joint positions
+        self.lines_q = [ax.plot([], [], color="green", label=f"Joint {i + 1} Position")[0] for i, ax in enumerate(self.fig_axes)]
+        self.lines_q_des = [ax.plot([], [], color="orange", label=f"Joint {i + 1} Desired")[0] for i, ax in enumerate(self.fig_axes)]
+
         for ax in self.fig_axes:
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Position (rad)")
@@ -21,16 +26,9 @@ class PandaPlot():
             ax.legend(loc="upper left")
             ax.set_xlim(0, 60) 
             ax.set_ylim(-3.14, 3.14) 
+            ax.legend()
 
-        # Lines for joint positions
-        self.lines_q = [ax.plot([], [], color="green", label=f"Joint {i + 1} Position")[0] for i, ax in enumerate(self.fig_axes)]
-        self.lines_q_des = [ax.plot([], [], color="orange", label=f"Joint {i + 1} Desired")[0] for i, ax in enumerate(self.fig_axes)]
 
-    
-        # Lines for joint positions
-        self.lines_q = [ax.plot([], [], label=f"Joint {i + 1} Position")[0] for i, ax in enumerate(self.fig_axes)]
-        self.lines_q_des = [ax.plot([], [], label=f"Joint {i + 1} Desired")[0] for i, ax in enumerate(self.fig_axes)]
-        
         # Data for joint positions
         self.t_history = []
         self.q_history = [[] for _ in range(self.NUM_JOINTS)]
@@ -40,6 +38,13 @@ class PandaPlot():
         #################################################################################
         # Figure for xy and xz planes
         self.fig_planes, (self.ax_yx, self.ax_xz) = plt.subplots(1, 2, figsize=(12, 6))
+        
+        # Lines for yx and xz plots
+        self.line_yx, = self.ax_yx.plot([], [], label="Y", color="green")
+        self.line_yx_des, = self.ax_yx.plot([], [], label="Y Desired", color="orange", linestyle="--")
+        self.line_xz, = self.ax_xz.plot([], [], label="Y", color="green")
+        self.line_xz_des, = self.ax_xz.plot([], [], label="Y Desired", color="orange", linestyle="--")
+        
         for ax, title, xlabel, ylabel in [(self.ax_yx, "XY Plane", "Y", "X"), (self.ax_xz, "XZ Plane", "X", "Z")]:
             ax.set_title(title)
             ax.set_xlabel(xlabel)
@@ -48,15 +53,12 @@ class PandaPlot():
             ax.legend(loc="upper left")
             ax.set_xlim(-0.7, 0.7) 
             ax.set_ylim(0.1, 0.8) 
+            ax.legend()
         
         # Invert the y for displaying letters nicely
         self.ax_yx.invert_xaxis()
 
-        # Lines for yx and xz plots
-        self.line_yx, = self.ax_yx.plot([], [], label="Y", color="green")
-        self.line_yx_des, = self.ax_yx.plot([], [], label="Y_des", color="orange", linestyle="--")
-        self.line_xz, = self.ax_xz.plot([], [], label="Y", color="green")
-        self.line_xz_des, = self.ax_xz.plot([], [], label="Y_des", color="orange", linestyle="--")
+
 
         # Data for xz and xy plots
         self.Y_history = [[] for _ in range(self.DIM)]
