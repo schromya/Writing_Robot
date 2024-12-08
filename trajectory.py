@@ -18,18 +18,18 @@ def circle_trajectory(t:float) -> np.array:
 
 def point_trajectory(t) -> np.array:
     """
-    
+    Returns singular point trajectory
     """
 
-
-    # if t >= 3:
-    #     return np.array([0.4, 0.0, 0.55])
-    
     return np.array([0.3, 0.0 ,0.55,
                      -3.14, 0, 0])
 
 
 def svg_trajectory(t, svg_path) -> np.array:
+    """
+    Returns svg trajectroy generated from svg file svg_path
+    """
+
     dx = 0.4
     dy = 0.4
     x_min= 0.2
@@ -41,8 +41,9 @@ def svg_trajectory(t, svg_path) -> np.array:
     i = math.floor(t / 0.1) # Calculate the index for every 0.1 seconds
 
     if i < len(scaled_coords):
-        return np.array(scaled_coords[i] + [-3.14, 0, 0])
     
-    return np.array(scaled_coords[-1] + [-3.14, 0, 0])
+        return np.concatenate((np.array(scaled_coords[i]), np.array([-3.14, 0, 0])))
+    
+    return np.concatenate((np.array(scaled_coords[-1]), np.array([-3.14, 0, 0])))
 
 

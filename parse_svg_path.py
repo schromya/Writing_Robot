@@ -11,8 +11,12 @@ z_min = 0.30
 
 
 
-# Simple function to parse the line paths in an SVG file (marked "d") into a set of absolute spatial coordinates. 
 def parse_svg_for_paths(svg_file):
+    """
+    Parses the line paths in an SVG file (marked "d") 
+    into a set of absolute spatial coordinates. 
+    """
+
     # Find lines with 'd="' at the beginning: 
     d_lines = []
     ignore = 0    # control parameter to ignore "<clipPath>" sections
@@ -33,12 +37,12 @@ def parse_svg_for_paths(svg_file):
     #first_absolute = 1 
     for d_line in d_lines:
         chunks = d_line.split(' ')  # Split the string at spaces
-#        print(chunks)
+
         # Step through the chunks and parse out coordinates
         ii = 0
         while ii < len(chunks) : 
             chunk = chunks[ii]
-#            print(chunk)
+
             if chunk[0].isalpha() :  # If chunk is alphabetic, it's a setting telling us what's coming. 
                 
                 # Case of mode command determines absolute (upper) or relative (lower)
@@ -113,13 +117,16 @@ def parse_svg_for_paths(svg_file):
                         incr = 1
                 
                 ii += incr
-    print("HERERE---", svg_coords)
+
     svg_coords = np.append(svg_coords, [current_point + np.array([0.,0.,0.05])], axis=0)
                 
     return svg_coords
 
-# Function to scale the coordinates from SVG to a specific size of workspace (rectangle, dimensions dx and dy)            
 def scale_coords_to_arena(coords, dx=dx , dy=dy, x_min=x_min, z_min=z_min):
+    """
+    Scales the coordinates from SVG to a specific size of workspace/arena 
+    (rectangle, dimensions dx and dy)            
+    """
     xsvg = coords[:,0]
     ysvg = coords[:,1]  # Note that Y is Down in SVG!
     zdesigned = coords[:,2]
@@ -147,11 +154,11 @@ def scale_coords_to_arena(coords, dx=dx , dy=dy, x_min=x_min, z_min=z_min):
 
 
 if __name__=='__main__':
-    # Default file to read    save_coords_to_csv(svg_file, scaled_coords)
+
     svg_file = 'svg/swirl.svg'
 
     svg_coords = parse_svg_for_paths(svg_file)
     scaled_coords = scale_coords_to_arena(svg_coords)
 
-    print(scaled_coords)
+
     
