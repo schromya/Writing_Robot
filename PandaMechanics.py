@@ -119,13 +119,6 @@ class PandaMechanics():
         J = pin.computeJointJacobian(self.model, self.data, q, JOINT_ID)
         return J
     
-    def get_Jacobian_derivative(self, q: np.array) -> np.array:
-        """
-        Returns the derivative of the Jacobian of the end effector (J-dot).
-        """
-
-        J_dot = pin.computeFrameJacobianDot(self.model, self.data, q, dq, pin.ReferenceFrame.LOCAL)
-        return J_dot
 
 
 

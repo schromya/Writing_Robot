@@ -37,7 +37,6 @@ class TaskSpaceController:
     def in_constraint_upper(self, x, q):
         """Inequality constraint: upper bound for the control input u"""
         u = x[:len(q)]
-
         return 2000 - u
 
     def in_constraint_lower(self, x, q):
@@ -45,14 +44,16 @@ class TaskSpaceController:
         u = x[:len(q)]
         return u - 500  # Example: lower bound for control input norm
 
-    def equality_constraint(self, x, q, dq, ddq_des, J):
+    def equality_constraint(self, x, q, dq, ddq, J):
         """
         Equality constraint: M * q'' + C * q' + G = u + J.T * Fz
         """
         u = x[:len(q)]  # Control input
-        
         Fz = x[len(q):len(q) + 1]  # Vertical force
-        q_ddot = ddq_des  # Desired acceleration (q'')
+        ddy = x[len(q) + 1:]
+
+        # dJ = self.panda_mech.get_Jacobian_derivative(q)
+        # ddq = (ddy - dJ * dq) / J
         
         # Get dynamics (M, C, G)
         M = self.panda_mech.get_M(q)  # Mass matrix
@@ -60,7 +61,7 @@ class TaskSpaceController:
         G = self.panda_mech.get_G(q)  # Gravity vector
 
         # Compute the left and right sides of the equation
-        left_side = M @ q_ddot + C @ dq + G
+        left_side = M @ ddq + C @ dq + G
 
         F = np.array([[0], [0], Fz, [0], [0], [0]])
         right_side = u + J.T @ F
@@ -71,13 +72,13 @@ class TaskSpaceController:
         return np.sum(np.abs(left_side - right_side))
 
 
-    def optimize(self, Y, Y_des, q, dq, ddq_des, Fz_d):
+    def optimize(self, Y, Y_des, q, dq, ddq, Fz_d):
         """Solve the optimization problem to get the optimal u, Fz, and trajectory."""
         
         y = Y - Y_des
         ddy_dim = 6 # X, Y, Z, roll, pitch, yaw
-        Kp = np.array([100] * ddy_dim) * 100.0  # Proportional gain
-        Kd = np.array([100] * ddy_dim) * 1.0  # Derivative gain
+        Kp = np.array([10] * ddy_dim)   # Proportional gain
+        Kd = np.array([1] * ddy_dim)  # Derivative gain
 
         J = self.panda_mech.get_Jacobian(q)
 
@@ -92,7 +93,7 @@ class TaskSpaceController:
         # Define constraints
         cons = [{'type': 'ineq', 'fun': self.in_constraint_upper, 'args': (q, )},
                 {'type': 'ineq', 'fun': self.in_constraint_lower, 'args': (q, )},
-                {'type': 'eq', 'fun': self.equality_constraint, 'args': (q, dq, ddq_des, J)}]
+                {'type': 'eq', 'fun': self.equality_constraint, 'args': (q, dq, ddq, J)}]
 
         # Minimize the objective function using a suitable optimizer (e.g., SLSQP)
         result = minimize(self.objective_function, x0, args=(y, q, dq, Fz_d, Kp, Kd, ),

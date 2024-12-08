@@ -38,6 +38,7 @@ taskController = TaskSpaceController(panda_mech=panda_mech)
 # Start robot in "default" position to not exceed joint limits
 q = np.array([0, -0.785, 0, -2.355, 0, 1.57, 0.785])
 dq = np.array([0] * 7)
+prev_dq = dq
 for i in range(NUM_JOINTS):
     p.resetJointState(bodyUniqueId = robot, jointIndex = i, targetValue = q[i])
 
@@ -65,6 +66,8 @@ while(True):
     ddq_des = np.array([0.001] * 7)
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
+    ddq = (dq - prev_dq) / TIME_STEP
+    prev_dq = dq
     J = panda_mech.get_Jacobian(q)
 
     # Only plot ever so often to reduce simulation slow down
@@ -74,7 +77,7 @@ while(True):
     #u = PD(q, dq, q_des)
     #u = PD_gravity(q, dq, q_des)
     #u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=Fz, J=J)
-    u = taskController.optimize(Y, Y_des, q, dq, ddq_des, Fz)
+    u = taskController.optimize(Y, Y_des, q, dq, ddq, Fz)
     #print("----U",  u.round(2))
     
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
