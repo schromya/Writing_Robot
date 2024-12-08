@@ -31,7 +31,7 @@ p.resetDebugVisualizerCamera(cameraDistance=1,
 plane_ID = p.loadURDF("plane.urdf")
 start_pos = [0,0,0]
 start_orientation = p.getQuaternionFromEuler([0,0,0])
-robot = p.loadURDF("urdfs/panda_arm_no_hand2.urdf", start_pos, start_orientation, useFixedBase=True)
+robot = p.loadURDF("urdfs/panda_arm_no_hand.urdf", start_pos, start_orientation, useFixedBase=True)
 table = p.loadURDF("urdfs/writing_surface.urdf", [0.45,0,0], start_orientation, useFixedBase=True)
 
 
