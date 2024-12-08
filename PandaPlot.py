@@ -97,6 +97,7 @@ class PandaPlot():
         # Update figures
         plt.pause(0.001)  # Allow time for plot updates
 
+
 if __name__ == "__main__":
     # Simulated data update loop for demonstration
     plot = PandaPlot()

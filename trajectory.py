@@ -33,7 +33,7 @@ def svg_trajectory(t, svg_path) -> np.array:
     dx = 0.4
     dy = 0.4
     x_min= 0.2
-    z_min = 0.6
+    z_min = 0.635
 
     svg_coords = parse_svg_for_paths(svg_path)
     scaled_coords = np.array(scale_coords_to_arena(svg_coords, dx=dx, dy=dy, x_min=x_min, z_min=z_min))

@@ -10,7 +10,7 @@ import time
 from PandaMechanics import PandaMechanics
 from PandaPlot import PandaPlot
 from trajectory import circle_trajectory, point_trajectory, svg_trajectory
-from controller import PD, PD_gravity,  PD_velocity
+from controller import PD, PD_gravity,  PD_velocity, CLF_QP_with_error
 
 # UPDATE THIS TO CHANGE SVGs
 SVG_FILE = "svg/hey.svg"
@@ -56,16 +56,25 @@ while(True):
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])
     q = np.array([p.getJointState(robot, i)[0] for i in JOINTS])
     dq = np.array([p.getJointState(robot, i)[1] for i in JOINTS])
+    J = panda_mech.get_Jacobian(q)
+
 
     # Only plot ever so often to reduce simulation slow down
     if i % 200 == 0:
         plot.update_plot(simulation_time, q, q_des, Y, Y_des)
 
+
     v = PD_velocity(q, dq, q_des)
+    # UNCOMMENT EITHER OF THE FOLLOWING TO TEST DIFFERENT CONTROLLERS
+    # u = PD(q, dq, q_des)
+    # u = CLF_QP_with_error(q, dq, q_des, dq_des=np.zeros_like(q), ddq_des=np.zeros_like(q), Fz=1, J=J)
 
     p.setJointMotorControlArray( bodyIndex=robot, jointIndices=JOINTS, 
         controlMode=p.VELOCITY_CONTROL, targetVelocities = v)
+        # USE THE FOLLOWING WHEN TESTING EITHER OF THE u (TORQUE) CONTROLLERS
+        # controlMode=p.TORQUE_CONTROL, forces = u)
 
+    
     p.stepSimulation() # Default is 1/240hz
     simulation_time += TIME_STEP
     i +=1
