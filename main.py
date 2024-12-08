@@ -51,12 +51,13 @@ while(True):
     Y = panda_mech.solve_fk(q)
 
     contact_state = Y[2] <= 0.7  # For buffer (Table height is 0.62m)
-    Fz = -1 if contact_state else 0
+    #Fz = -1 if contact_state else 0
+    Fz = 1
     
 
-    Y_des = circle_trajectory(simulation_time)
+    #Y_des = circle_trajectory(simulation_time)
 
-    #Y_des = point_trajectory(simulation_time)
+    Y_des = point_trajectory(simulation_time)
     #Y_des = svg_trajectory(simulation_time)
 
     q_des = panda_mech.solve_ik(q=q, x=Y_des[0], y=Y_des[1], z=Y_des[2])

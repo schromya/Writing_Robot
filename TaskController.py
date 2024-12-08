@@ -37,12 +37,13 @@ class TaskSpaceController:
     def in_constraint_upper(self, x, q):
         """Inequality constraint: upper bound for the control input u"""
         u = x[:len(q)]
-        return 2000 - np.linalg.norm(u)  # Example: upper bound for control input norm
+
+        return 2000 - u
 
     def in_constraint_lower(self, x, q):
         """Inequality constraint: lower bound for the control input u"""
         u = x[:len(q)]
-        return np.linalg.norm(u) - 400  # Example: lower bound for control input norm
+        return u - 500  # Example: lower bound for control input norm
 
     def equality_constraint(self, x, q, dq, ddq_des, J):
         """
@@ -81,10 +82,12 @@ class TaskSpaceController:
         J = self.panda_mech.get_Jacobian(q)
 
         # Initial guess for optimization (u, Fz, y'')
-        x0 = np.zeros(len(q) + 1 + ddy_dim)  # Initial guess for u, Fz, and trajectory y
+        x0 = np.array([1000] * 7 + [1] + [10] * 6)
+
+        #np.zeros(len(q) + 1 + ddy_dim)  # Initial guess for u, Fz, and trajectory y
 
         # Define the bounds for u and Fz (optional)
-        bounds = [(None, None)] * len(q) + [(None, None)] * 1 + [(None, None)] * ddy_dim
+        #bounds = [(None, None)] * len(q) + [(None, None)] * 1 + [(None, None)] * ddy_dim
 
         # Define constraints
         cons = [{'type': 'ineq', 'fun': self.in_constraint_upper, 'args': (q, )},
@@ -93,12 +96,14 @@ class TaskSpaceController:
 
         # Minimize the objective function using a suitable optimizer (e.g., SLSQP)
         result = minimize(self.objective_function, x0, args=(y, q, dq, Fz_d, Kp, Kd, ),
-                          method='SLSQP', constraints=cons, bounds=bounds)
+                          method='SLSQP', constraints=cons, )
 
         # The result will contain the optimized u, Fz, and y (trajectory)
         u_opt = result.x[:len(q)]  # Optimized control input
         Fz_opt = result.x[len(q):len(q) + 1]  # Optimized vertical force
-        y_opt = result.x[len(q) + 1:]  # Optimized trajectory
+        ddy_opt = result.x[len(q) + 1:]  # Optimized trajectory
         u = u_opt.T
+        print("Opt Fz_opt", Fz_opt.round(2))
+        print("Opt ddy_opt", ddy_opt.round(2))
         print("Opt u", u.round(2))
         return u
